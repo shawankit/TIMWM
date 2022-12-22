@@ -1,0 +1,25 @@
+{
+  "dev": {
+    "username": "root",
+    "password": "root",
+    "database": "DEV-fmspace",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "port": "5434"
+  },
+  "test": {
+    "username": "root",
+    "password": "root",
+    "database": "TEST-fmspace",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "port": "5434"
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "fmspace",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}

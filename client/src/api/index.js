@@ -56,4 +56,5 @@ export const createSalesInBulk = (sales, type) => API.post('/sales', { sales, ty
 
 export const getAllInvoices = (type, search, offset, limit) => API.get(UrlParamsReplace(`/invoices`, {}, { type, search, offset, limit }), { headers: getHeaders() });
 export const getInvoiceById = (invoiceId) => API.get(`/invoices/${invoiceId}`, { headers: getHeaders() });
+export const getReports = () => API.get(`/reports`, { headers: getHeaders() });
 

@@ -94,7 +94,9 @@ const Invoices = ({ page }) => {
     return (
         <div>
             <div className="site-layout-background p-5 mt-1">
-                <Title level={3} style={{color: 'rgba(107, 114, 128, var(--tw-text-opacity))'}} className='border-b-2' >Sale Invoices</Title>
+                <Title level={3} style={{color: 'rgba(107, 114, 128, var(--tw-text-opacity))'}} className='border-b-2' >
+                    {page === 'sales' ? 'Sale' : 'Purchase'} Invoices
+                </Title>
                 <Row className="w-full">
                     <Col span={24}>
                         <Table

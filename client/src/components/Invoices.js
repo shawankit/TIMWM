@@ -37,7 +37,7 @@ const Invoices = ({ page }) => {
 
     useEffect(() => {
         fetchInvoices();
-    },[currentPage, pageSize]);
+    },[page, currentPage, pageSize]);
 
     const openInvoiceDetail = (invoiceId) => {
         setSelectedInvoiceId(invoiceId);

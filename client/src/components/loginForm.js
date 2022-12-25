@@ -66,7 +66,8 @@ const LoginForm = ({
               </div>
             )}
           <Text className="mb-16 md:mb-10 text-sm text-gray-500">
-            An OTP will be sent via sms to verify your phone number
+            {/* An OTP will be sent via sms to verify your phone number */}
+            Proceed To Enter PIN
           </Text>
           <Button
             type="submit"
@@ -74,7 +75,7 @@ const LoginForm = ({
             fontWeight="font-bold"
             btnClass="w-full"
           >
-            Get OTP
+            Proceed
           </Button>
         </form>
       </div>

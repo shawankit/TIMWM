@@ -71,7 +71,7 @@ const Reports = ({ page }) => {
 
     useEffect(() => {
         fetchData();
-    },[]);
+    },[page]);
 
     
     const financialYearMonths = getMonthNamesForFinancialYear(2023);

@@ -100,6 +100,7 @@ module.exports.perform = async (sales, type) => {
                             const customerId = existingCustomerId ? existingCustomerId : uuid.v4();
                             customers.push({
                                 id: customerId,
+                                type: type == 'sales' ? 'customer' : 'vendor',
                                 code: customerCode,
                                 name: customer.name,
                                 gstNumber: customer.gstNumber,

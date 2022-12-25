@@ -9,7 +9,7 @@ import IconWithHeading from "../molecules/IconWithHeading";
 import { GlobalOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import { Breadcrumb } from "antd";
-import { createSalesInBulk } from "../api";
+import { createReceiptsInBulk, createSalesInBulk } from "../api";
 import Invoices from "./Invoices";
 
 const BulkUploadForm = ({ page }) => {
@@ -19,11 +19,7 @@ const BulkUploadForm = ({ page }) => {
     const [hasErrors, setHasErrors] = useState(false);
     const [invalidHeader, setInvalidHeader] = useState([]);
     const [record, setRecord] = useState(null);
-    const [toaster, setToaster] = useState({
-        show: false,
-        message: '',
-        success: true 
-    });
+    const [reload, setReload] = useState(false);
 
     const [validatedData, setValidatedData] = useState(false);
 
@@ -44,7 +40,8 @@ const BulkUploadForm = ({ page }) => {
 
     const handleBulkCreation = async (csvData) => {
       console.log(csvData, 'csvData')
-        const res = await createSalesInBulk(csvData, page);
+        const createApi = page == 'receipts' || page == 'payments'? createReceiptsInBulk : createSalesInBulk;
+        const res = await createApi(csvData, page);
         console.log(res, 'res')
         if (res.data.status) {
            if(res.data.entity.csvErrorArray){
@@ -52,6 +49,7 @@ const BulkUploadForm = ({ page }) => {
            }
            else{
             setCsvErrors([]);
+            setReload(true);
            }
         } else {
            
@@ -137,7 +135,7 @@ const BulkUploadForm = ({ page }) => {
         </Card>
       )}
 
-      { (page === 'sales' || page === 'purchase') && <Invoices page={page}/> }
+      <Invoices page={page} reload={reload}/>
     </div>
   );
 };
@@ -196,6 +194,31 @@ const getDataKeysMap = (page) => {
       "ROUND OFF": "roundOff",
       "TCS": "tcs",
       "TOTAL VALUE": "totalValue"
+    }
+  }
+
+  if(page == 'receipts'){
+    return {
+      'COMPANY': 'companyName',
+      'DIVISION': 'division',
+      'CUSTOMER NAME': 'customerName',
+      'CUSTOMER CODE': 'customerCode',
+      'INVOICE NUMBER': 'invoiceNumber',
+      'NATURE': 'nature',
+      'RECEIPT VIA': 'via',
+      'AMOUNT': "amount"
+    }
+  }
+  if(page == 'payments'){
+    return {
+      'COMPANY': 'companyName',
+      'DIVISION': 'division',
+      'VENDOR NAME': 'customerName',
+      'VENDOR CODE': 'customerCode',
+      'INVOICE NUMBER': 'invoiceNumber',
+      'NATURE': 'nature',
+      'RECEIPT VIA': 'via',
+      'AMOUNT': "amount"
     }
   }
 }

@@ -8,11 +8,11 @@ const GetSalesReportQuery = require('../queries/get-sales-reports-by-division-qu
 
 
 const get = async (req) => {
-    const { id } = req.params;
+    const { type } = req.query;
 
     logInfo('Request to fetch all reports',{});
 
-    const response = await db.find(new GetSalesReportQuery());
+    const response = await db.find(new GetSalesReportQuery(type));
 
     return respond(response,'Successfully Fetched reports', 'Failed to fetch reports')
 }

@@ -129,6 +129,14 @@ const EditableTable = ({ setTransactions, customerData, transactions, milk, notE
     setDataSource(newData);
   };
 
+  const numberRender = (number, data) => {
+    return (
+        <div>
+            { number ? number.toLocaleString('en-IN') : number } 
+        </div>
+    )
+}
+
   const defaultColumns = [
     {
       title: 'Item Name',
@@ -146,6 +154,7 @@ const EditableTable = ({ setTransactions, customerData, transactions, milk, notE
       title: 'Rate',
       dataIndex: 'rate',
       width: '10%',
+      render: numberRender
     },
     {
       title: 'Quantity',
@@ -157,6 +166,7 @@ const EditableTable = ({ setTransactions, customerData, transactions, milk, notE
       title: 'Total',
       dataIndex: 'total',
       width: '20%',
+      render: numberRender
     },
     // {
     //   title: 'GST Rate (%)',
@@ -249,11 +259,14 @@ const EditableTable = ({ setTransactions, customerData, transactions, milk, notE
     };
   });
 
+  
+
   let staticRowCount = 2;
   const taxableRow = {
     key: count + staticRowCount++,
     categoryName: `Taxable Value`,
-    total: invoiceDetails.taxableAmount
+    total: invoiceDetails.taxableAmount,
+    render: numberRender
   }
 
   const igstRow = {

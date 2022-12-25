@@ -30,7 +30,7 @@ const App = () => {
   return (
     <Layout className='h-screen'>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <Navbar />
+        <Navbar collapsed={collapsed} />
       </Sider>
       <Layout className="site-layout">
         <Header
@@ -58,10 +58,10 @@ const App = () => {
           <div style={{ padding: 10, height: 'calc(100vh - 90px)', overflowY :'auto' }}>
            <Switch>
               <Route exact path="/">
-                <Homepage />
+                <Homepage page={'sales'}/>
               </Route>
-              <Route exact path="/reports">
-                <Homepage />
+              <Route exact path="/purchase-reports">
+                <Homepage page={'purchase'}/>
               </Route>
               <Route exact path="/sales">
                 <BulkUploadForm  page={'sales'} />

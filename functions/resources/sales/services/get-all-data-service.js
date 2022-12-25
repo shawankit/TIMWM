@@ -20,7 +20,7 @@ const getTransactionInvoiceIdMap = (invoices) => invoices.reduce((result, transa
 
 module.exports.perform = (type) => {
     logInfo('Request to get datas service');
-    console.log('data');
+    const customerType = type == 'sales' ? 'customer' : 'vendor'
     return composeResult(
         (companies) => composeResult(
             (customers) => composeResult(
@@ -34,7 +34,6 @@ module.exports.perform = (type) => {
                                 invoiceNumberIdMap: getInvoiceNumberIdMap(invoices.rows),
                                 transactionIdMap: getTransactionInvoiceIdMap(transactions.rows)
                             };
-                            console.log('data', data);
     
                             return Result.Ok(data);
                         },
@@ -44,7 +43,7 @@ module.exports.perform = (type) => {
                 )(),
                 () => db.findOne(new GetItemsQuery()),
             )(),
-            () => db.find(new GetCustomersQuery()),
+            () => db.find(new GetCustomersQuery(customerType)),
         )(),
         () => db.find(new GetCompaniesQuery()),
     )();

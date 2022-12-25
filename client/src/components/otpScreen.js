@@ -20,9 +20,9 @@ const OtpScreen = ({
     () => setTimer((currTimer) => currTimer - 1),
     []
   );
-  useEffect(() => {
-    timer > 0 && setTimeout(timeOutCallback, 1000);
-  }, [timer, timeOutCallback]);
+  // useEffect(() => {
+  //   timer > 0 && setTimeout(timeOutCallback, 1000);
+  // }, [timer, timeOutCallback]);
 
   const resetTimer = function () {
     if (!timer) {
@@ -43,9 +43,13 @@ const OtpScreen = ({
     <div className="md:min-h-screen bg-white flex items-center px-6 py-14 lg:pl-20 lg:pr-30">
       <form onSubmit={onClickLogin}>
         <Heading type="h4" className="mb-2 md:mb-8 font-medium">
-          Enter verification code
+          Enter Your PIN {" "}
+          <span className="font-bold">{`${loginDetails.mobileNumber}`}</span>
+          <span className="ml-1">
+            <EditOutlined onClick={editMobile} />
+          </span>
         </Heading>
-        <div className="mb-8 md:mb-9">
+        {/* <div className="mb-8 md:mb-9">
           <Text>
             We have just sent verification code to{" "}
             <span className="font-bold">{`${loginDetails.mobileNumber}`}</span>
@@ -53,7 +57,7 @@ const OtpScreen = ({
               <EditOutlined onClick={editMobile} />
             </span>
           </Text>
-        </div>
+        </div> */}
         <OtpComponent
           onChange={setOtp}
           otpValue={otp}
@@ -62,8 +66,8 @@ const OtpScreen = ({
         />
         {timer > 0 && (
           <Text className="my-8 md:my-11 text-sm text-gray-600 font-light">
-            Resend OTP in{" "}
-            <span className="text-gray-900 font-bold">{timer}s</span>
+            {/* Resend OTP in{" "}
+            <span className="text-gray-900 font-bold">{timer}s</span> */}
           </Text>
         )}
         {timer == 0 && (

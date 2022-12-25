@@ -1,4 +1,4 @@
-const InvoiceData = [
+const ReceiptData = [
     {
         label : "Company",
         name: 'companyName',
@@ -24,29 +24,29 @@ const InvoiceData = [
         inputType: 'text'
     },
     {
+        label : "Nature",
+        name: 'nature',
+        type: 'input',
+        inputType: 'text'
+    },
+    {
+        label : "VIA",
+        name: 'via',
+        inputType: 'text',
+        list: "customerType"
+    },
+    {
         label : "Invoice No.",
         name: 'invoiceNumber',
         type: 'input',
         inputType: 'text'
     },
     {
-        label : "Invoice Date",
-        name: 'invoiceDate',
-        type: 'input',
-        inputType: 'text'
-    },
-    {
-        label : "Taxable Amount",
-        name: 'taxableAmount',
+        label : "Amount",
+        name: 'amount',
         inputType: 'number',
         list: "customerType"
     },
-    {
-        label : "Total Amount",
-        name: 'totalValue',
-        inputType: 'number',
-        list: "customerType"
-    }
 ];
 
-export default InvoiceData;
+export default ReceiptData;

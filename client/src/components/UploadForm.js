@@ -26,6 +26,10 @@ const BulkUploadForm = ({ page }) => {
     const validateButtonRef = useRef(null);
 
     useEffect(() => {
+      onCancel();
+  }, [page]);
+  
+    useEffect(() => {
         setHasErrors(true);
     }, [csvErrors]);
 
@@ -59,7 +63,7 @@ const BulkUploadForm = ({ page }) => {
 
     const validateBulkCreation = async (csvData, invalidHeaders) => {
         if (invalidHeaders.length > 0) {
-            return false;
+            setInvalidHeader(invalidHeaders);
         } else {
             handleBulkCreation(csvData)
         }
@@ -217,7 +221,7 @@ const getDataKeysMap = (page) => {
       'VENDOR CODE': 'customerCode',
       'INVOICE NUMBER': 'invoiceNumber',
       'NATURE': 'nature',
-      'RECEIPT VIA': 'via',
+      'PAID VIA': 'via',
       'AMOUNT': "amount"
     }
   }

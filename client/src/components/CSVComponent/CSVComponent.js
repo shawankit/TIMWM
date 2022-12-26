@@ -27,7 +27,7 @@ const CSVComponent = ({
 
     const onValidate = async ({ newCsv, invalidHeaders }) => {
         setRecord(false);
-        setInvalidHeader(invalidHeaders);
+        //setInvalidHeader(invalidHeaders);
 
         if (!newCsv) {
             resetUploadedCsv();

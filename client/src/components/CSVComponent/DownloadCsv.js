@@ -5,14 +5,16 @@ export default function DownloadCsv({
   sampleData,
   fileName,
   children,
+  page
 }) {
   const { CSVDownloader, Type } = useCSVDownloader();
+  const getFileName = () => `${page}-sample-file`;
 
   return (
     <CSVDownloader
       variant="Link"
       type={Type.Button}
-      filename={fileName}
+      filename={getFileName()}
       bom={true}
       config={{
         delimiter: ",",

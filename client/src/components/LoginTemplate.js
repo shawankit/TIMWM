@@ -63,7 +63,7 @@ const LoginTemplate = ({}) => {
           <LoginForm
             onSubmit={handleGetOTP}
             loginDetails={loginDetails}
-            error={apiError}
+            apierror={apiError}
             defaultValues={{ mobileNumber: loginDetails.mobileNumber }}
           />
         );

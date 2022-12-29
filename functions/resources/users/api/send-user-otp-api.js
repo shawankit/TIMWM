@@ -18,7 +18,7 @@ const post = async (req) => {
         (user) => R.ifElse(
             () => user,
             () => Result.Ok(user),
-            () => Result.Error(new ValidationError(400, "User doesn't exist")),
+            () => Result.Error(new ValidationError(400, "Mobile Number is not registered")),
         )(),
         () => db.findOne(new GetUserDetailsQuery(mobileNumber)),
     )();

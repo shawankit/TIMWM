@@ -11,14 +11,14 @@ const db = require('db/repository');
 
 const verify = (userOtp, givenOtp) => {
     console.log(userOtp, givenOtp)
-    if (!userOtp) return Result.Error(new ValidationError(0, ['Invalid OTP']));
-    if (Date.parse(userOtp.expiredAt) < Date.now()) { return Result.Error(new ValidationError(0, ['OTP has expired'])); }
+    if (!userOtp) return Result.Error(new ValidationError(0, ['Incorrect PIN']));
+    //if (Date.parse(userOtp.expiredAt) < Date.now()) { return Result.Error(new ValidationError(0, ['OTP has expired'])); }
 
     const success = PasswordHash.verify(givenOtp.toString(), userOtp.otpHash);
 
     if (success) return Result.Ok({});
 
-    return Result.Error(new ValidationError(0, ['Invalid OTP']));
+    return Result.Error(new ValidationError(0, ['Incorrect PIN']));
 };
 
 module.exports.verify = async (mobileNumber, givenOtp) => {

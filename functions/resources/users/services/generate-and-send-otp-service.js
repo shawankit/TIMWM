@@ -17,13 +17,14 @@ const useMockOtp = (mobileNumber) => config.env === 'dev'
     || mobileNumber === '1111111111'
     || mobileNumber === '2817611384';
 
-const generateOtp = async (mobileNumber) => {
+const generateOtp = async (user) => {
+    const { mobileNumber, password } = user;
     logInfo('Requested to generate otp', {
         mobileNumber
     });
     const id = uuid.v4();
 
-    let otp = 1111;
+    let otp = password.includes('P_') ? password.replace('P_', '') : 1111;
     // if (!useMockOtp(mobileNumber)) {
     //     otp = Random.generator({
     //         min: 1000,
@@ -66,7 +67,7 @@ module.exports.perform = async (user, modes) => {
         user,
         modes
     });
-    const otpResult = await generateOtp(user.mobileNumber);
+    const otpResult = await generateOtp(user);
 
     return whenResult(
         () => Result.Ok(user),

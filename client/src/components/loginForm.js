@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Heading from "../atoms/Heading";
 import Text from "../atoms/Text";
 import InputLabel from "../atoms/InputLabel";
@@ -7,13 +7,14 @@ import Button from "../atoms/Button";
 
 const LoginForm = ({
   loginDetails,
-  onSubmit
+  onSubmit,
+  apierror
 }) => {
   const [disabled, setDisabled] = useState(
     loginDetails.mobileNumber.length != 10
   );
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState(apierror);
   const handleMobileNumberChange = (event) => {
     const val = event.target.value.toString();
     if (val.length == 10) {
@@ -23,6 +24,9 @@ const LoginForm = ({
     setDisabled(true);
     setError('');
   };
+  useEffect(() => {
+    setError(apierror);
+  }, [apierror])
   console.log('error', error)
 
   return (

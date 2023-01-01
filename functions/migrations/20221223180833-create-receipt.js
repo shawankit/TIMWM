@@ -11,6 +11,11 @@ module.exports = {
         type: Sequelize.ENUM,
         values: ['receipts', 'payments']
       },
+      receiptDate: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        field: 'receipt_date'
+      },
       companyId: {
         type: Sequelize.UUID,
         field: 'company_id',

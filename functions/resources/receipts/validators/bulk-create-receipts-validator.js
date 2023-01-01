@@ -6,7 +6,7 @@ const {
 } = require('validation');
 const moment = require('moment');
 
-const isValidDate = (date) => moment(date).isValid();
+const isValidDate = (date) => moment(date, 'DD-MM-YYYY').isValid();
 
 const validationMessages = {
     companyName: [
@@ -14,6 +14,10 @@ const validationMessages = {
     ],
     division: [
         [notEmpty, 'Division is Mandatory!']
+    ],
+    receiptDate: [
+        [notEmpty, 'Receipt Date is Mandatory!'],
+        [isValidDate, 'Receipt Date should be in date format (DD-MM-YYYY)']
     ],
     customerCode: [
         [notEmpty, 'Customer Code is Mandatory!']

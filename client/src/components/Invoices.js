@@ -33,7 +33,8 @@ const Invoices = ({ page, reload }) => {
             customerCode: inv.customer?.code,
             invoiceDate: inv.invoiceDate? moment(inv.invoiceDate).format('DD-MM-YYYY') : null,
             companyName: inv.company.name,
-            division: inv.company.division
+            division: inv.company.division,
+            receiptDate: inv.receiptDate? moment(inv.receiptDate).format('DD-MM-YYYY') : null,
         })));
         setTotal(response?.data?.entity.count);
     }
@@ -75,11 +76,21 @@ const Invoices = ({ page, reload }) => {
         }
         return {};
     }
+    const getTitle = (column) => {
+        if((page == 'purchase' || page == 'payments') && (column.name == 'customerName' || column.name == 'customerCode')){
+           return column.label.replace('Customer','Vendor');
+        }
+        if(page == 'payments' && (column.name == 'receiptDate' || column.name == 'via')){
+            return column.label.replace('Receipt','Payment');
+        }
+
+        return  column.label;
+    }
     const fieldData = page == 'receipts' || page == 'payments'? ReceiptData : InvoiceData; 
     const columns = fieldData.map((column) => ({
         title:  ( 
             <Typography.Text ellipsis={true} title={column.label}>
-                {page == 'purchase' && (column.name == 'customerName' || column.name == 'customerCode') ? column.label.replace('Customer','Vendor') : column.label}
+                {getTitle(column)}
             </Typography.Text>
         ),
         dataIndex: column.name,

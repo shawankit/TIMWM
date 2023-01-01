@@ -6,7 +6,7 @@ const {
 } = require('validation');
 const moment = require('moment');
 
-const isValidDate = (date) => moment(date).isValid();
+const isValidDate = (date) => moment(date, 'DD-MM-YYYY').isValid();
 
 const validationMessages = {
     companyName: [
@@ -23,7 +23,7 @@ const validationMessages = {
     ],
     invoiceDate: [
         [notEmpty, 'Invoice Date is Mandatory!'],
-        [isValidDate, 'Invoice Date should be in date format']
+        [isValidDate, 'Invoice Date should be in date format (DD-MM-YYYY)']
     ],
     invoiceNumber: [
         [notEmpty, 'Invoice Number is Mandatory!'],

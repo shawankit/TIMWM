@@ -10,6 +10,7 @@ const CreateCustomerInBulkQuery = require('../../customers/queries/create-custom
 const CreateInvoiceInBulkQuery = require('../../invoices/queries/create-invoices-in-bulk-query');
 const CreateItemInBulkQuery = require('../../items/queries/create-Items-in-bulk-query');
 const CreateTransactionInBulkQuery = require('../../transactions/queries/create-transactions-in-bulk-query');
+const moment = require('moment');
 
 const get0IfEmpty = (value) => value === "" ? 0 : value;
 
@@ -40,7 +41,7 @@ const processData = async (sales, type) => {
             customer.invoiceMap[invoiceNumber] = {
                 items: [],
                 type,
-                invoiceDate: data.invoiceDate,
+                invoiceDate: moment(data.invoiceDate, 'DD-MM-YYYY').format('YYYY-MM-DD'),
                 labourCharges: get0IfEmpty(data.labourCharges),
                 claimAmount: get0IfEmpty(data.claimAmount),
                 taxableAmount: get0IfEmpty(data.taxableAmount),

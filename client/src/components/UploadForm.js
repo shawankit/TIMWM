@@ -210,7 +210,8 @@ const getDataKeysMap = (page) => {
       'INVOICE NUMBER': 'invoiceNumber',
       'NATURE': 'nature',
       'RECEIPT VIA': 'via',
-      'AMOUNT': "amount"
+      'AMOUNT': "amount",
+      'RECEIPT DATE': "receiptDate"
     }
   }
   if(page == 'payments'){
@@ -222,7 +223,8 @@ const getDataKeysMap = (page) => {
       'INVOICE NUMBER': 'invoiceNumber',
       'NATURE': 'nature',
       'PAID VIA': 'via',
-      'AMOUNT': "amount"
+      'AMOUNT': "amount",
+      'PAYMENT DATE': "receiptDate"
     }
   }
 }

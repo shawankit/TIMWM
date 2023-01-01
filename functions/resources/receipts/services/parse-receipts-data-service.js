@@ -5,6 +5,7 @@ const db = require('db/repository');
 const R = require('ramda');
 const Result = require('folktale/result');
 const GetAllDataService = require('./../../sales/services/get-all-data-service');
+const moment = require('moment');
 
 const get0IfEmpty = (value) => value === "" ? 0 : value;
 
@@ -45,7 +46,7 @@ const processData = async (receipts, type, allDbMap, invoiceType) => {
     let receiptsTobeCreated = [];
     if(!error){
         receiptsTobeCreated = receipts.map((data, index) => {
-            const { companyName, division, customerCode, nature, invoiceNumber, amount, via } = data;
+            const { companyName, division, customerCode, nature, invoiceNumber, amount, via, receiptDate } = data;
             
             return {
                 id: uuid.v4(),
@@ -55,7 +56,8 @@ const processData = async (receipts, type, allDbMap, invoiceType) => {
                 invoiceId: nature.toLowerCase() == 'adjust' ? invoiceNumberIdMap[invoiceNumber] : null,
                 amount,
                 type,
-                via
+                via,
+                receiptDate: moment(receiptDate, 'DD-MM-YYYY').format('YYYY-MM-DD')
             }
         });
     }

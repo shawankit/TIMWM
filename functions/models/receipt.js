@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM,
       values: ['receipts', 'payments']
     },
+    receiptDate: DataTypes.DATE,
     companyId: DataTypes.UUID,
     customerId: DataTypes.UUID,
     invoiceId: DataTypes.UUID,

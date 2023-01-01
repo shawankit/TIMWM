@@ -1,13 +1,13 @@
 const InvoiceData = [
     {
-        label : "Company",
-        name: 'companyName',
+        label : "Invoice No.",
+        name: 'invoiceNumber',
         type: 'input',
         inputType: 'text'
     },
     {
-        label : "Division",
-        name: 'division',
+        label : "Invoice Date",
+        name: 'invoiceDate',
         type: 'input',
         inputType: 'text'
     },
@@ -18,20 +18,20 @@ const InvoiceData = [
         inputType: 'text'
     },
     {
-        label : "Customer",
+        label : "Customer Name",
         name: 'customerName',
         type: 'input',
         inputType: 'text'
     },
     {
-        label : "Invoice No.",
-        name: 'invoiceNumber',
+        label : "Company",
+        name: 'companyName',
         type: 'input',
         inputType: 'text'
     },
     {
-        label : "Invoice Date",
-        name: 'invoiceDate',
+        label : "Division",
+        name: 'division',
         type: 'input',
         inputType: 'text'
     },

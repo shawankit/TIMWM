@@ -8,6 +8,7 @@ import { Homepage, LoginTemplate, Navbar } from './components';
 import { AppstoreOutlined, MailOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import { getAuth, removeAuth } from './api';
 import BulkUploadForm from './components/UploadForm';
+import FundReport from './components/FundReport';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -58,6 +59,9 @@ const App = () => {
           <div style={{ padding: 10, height: 'calc(100vh - 90px)', overflowY :'auto' }}>
            <Switch>
               <Route exact path="/">
+                <FundReport />
+              </Route>
+              <Route exact path="/sales-reports">
                 <Homepage page={'sales'}/>
               </Route>
               <Route exact path="/purchase-reports">

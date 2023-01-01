@@ -27,7 +27,7 @@ const Navbar = ({ collapsed }) => {
 
   const defaultSelectedKeys = (() => {
     if(window.location.pathname === '/'){
-      return ['sales-reports'];
+      return ['fund-reports'];
     }
     return [window.location.pathname.replace('/', '')];
   })();
@@ -41,14 +41,16 @@ const Navbar = ({ collapsed }) => {
       {activeMenu && (
       <Menu theme="dark" mode="inline" defaultOpenKeys={['reports']} defaultSelectedKeys={defaultSelectedKeys} subMenuOpenDelay={0.2}>
         <Menu.SubMenu key="reports" title={'Reports'} icon={<HomeOutlined />}>
+          <Menu.Item  key="fund-reports" icon={<BarChartOutlined />}>
+            <Link to="/">Fund Reports</Link>
+          </Menu.Item>
           <Menu.Item  key="sales-reports" icon={<BarChartOutlined />}>
-            <Link to="/">Sales Report</Link>
+            <Link to="/sales-reports">Sales Report</Link>
           </Menu.Item>
           <Menu.Item  key="purchase-reports" icon={<PieChartOutlined />}>
             <Link to="/purchase-reports">Purchase Report</Link>
           </Menu.Item>
         </Menu.SubMenu>
-        
         <Menu.Item icon={<FileExcelOutlined />} key='sales'>
           <Link to="/sales">Sales</Link>
         </Menu.Item>

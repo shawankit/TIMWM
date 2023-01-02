@@ -14,8 +14,8 @@ const server = require('http').createServer(app);
 Route.setApp(app);
 
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '100mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
 
 // require("./passport")(app);
 require('./api-routes');

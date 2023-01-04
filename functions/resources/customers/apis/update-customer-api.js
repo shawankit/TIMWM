@@ -6,7 +6,6 @@ const uuid = require('uuid');
 const Result = require('folktale/result');
 const db = require('db/repository');
 const UpdateCustomerQuery = require('../queries/update-customer-query');
-const CreateBulkItemQuery = require('../../milk-category/queries/create-bulk-milk-category-query');
 
 const post = async (req) => {
 
@@ -17,19 +16,11 @@ const post = async (req) => {
     logInfo('Request to update customer',name);
 
     const response = await composeResult(
-        (customer) => R.ifElse(
-            () => type === 'special',
-            () => composeResult(
-                () => Result.Ok(customer),
-                () => db.execute(new CreateBulkItemQuery(rates.map((rate) => ({...rate, customerId: id }))))
-            )(),
-            () => Result.Ok(customer)
-        )(),
         () => db.execute(new UpdateCustomerQuery(id,name,type, mobile))
     )();
 
     return respond(response,'Successfully Updated Customer', 'Failed to update customer')
 }
 
-Route.withOutSecurity().noAuth().put('/customers/:id',post).bind();
+Route.withSecurity().noAuth().put('/customers/:id',post).bind();
 

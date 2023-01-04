@@ -10,12 +10,13 @@ const GetReceiptsQuery = require('../queries/get-receipts-query');
 
 const get = async (req) => {
 
-    const { type, search, offset, limit } = req.query;
+    const { type, search, offset, limit, filters } = req.query;
 
 
     logInfo('Request to fetch all receipts',{});
 
-    const response = await db.find(new GetReceiptsQuery(type, search, offset, limit));
+    const parsedFilters = !R.isNil(filters) && !R.isEmpty(filters) && JSON.parse(filters); 
+    const response = await db.find(new GetReceiptsQuery(type, search, offset, limit, parsedFilters));
     
     return respond(response,'Successfully Fetched All receipts', 'Failed to fetch receipts')
 }

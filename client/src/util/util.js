@@ -1,3 +1,4 @@
+import moment from 'moment';
 import swal from 'sweetalert';
 
 export function sweetalertValidate(message) {
@@ -113,3 +114,11 @@ export function uuid() {
         return v.toString(16);
     });
 }
+
+export const getDateWithTime = (date, [h, m, s]) => {
+    const mo = moment(date);
+    mo.set("hour", h);
+    mo.set("minute", m);
+    mo.set("second", s);
+    return mo.toDate();
+  };

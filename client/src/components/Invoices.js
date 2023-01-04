@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import millify from 'millify';
-import { Typography, Row, Col, Statistic, Table, Button, Pagination } from 'antd';
+import { Typography, Row, Col, Statistic, Table, Button, Pagination, Input } from 'antd';
 import { getAllInvoices, getAllReceipts } from '../api';
 import InvoiceData from '../data/InvoiceData';
 import moment from 'moment';
 import InvoiceDetailsModal from './Modal/InvoiceDetailModal';
 import ReceiptData from '../data/ReceiptData';
+import Search from 'antd/lib/transfer/search';
+import FilterModal from './Modal/FilterModal';
+import SelectedFilters from './Modal/SelectedFilters';
 
 const { Title } = Typography;
 
 const Invoices = ({ page, reload }) => {
 
     const [invoices, setInvoices] = useState(null);
-    const [visible, setVisible] = useState(false);
-    const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [visibleID, setVisibleID] = useState(false);
     const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
 
@@ -21,10 +22,13 @@ const Invoices = ({ page, reload }) => {
     const [pageSize, setPageSize] = useState(10);
     const [total, setTotal] = useState(0);
 
+    const [search, setSearch] = useState('');
+    const [filter, setFilter] = useState({});
+    const [visibleFilter, setVisibleFilter] = useState(false);
+
     const fetchInvoices = async () => {
         const getApi = page == 'receipts' || page == 'payments'? getAllReceipts : getAllInvoices; 
-        const response = await getApi(page, '', (currentPage - 1) * pageSize, pageSize);
-        console.log(response);
+        const response = await getApi(page, search, (currentPage - 1) * pageSize, pageSize , JSON.stringify(filter));
         
         setInvoices(response?.data?.entity.rows.map((inv) => ({
             ...inv,
@@ -41,7 +45,7 @@ const Invoices = ({ page, reload }) => {
 
     useEffect(() => {
         fetchInvoices();
-    },[page, currentPage, pageSize, reload]);
+    },[page, currentPage, pageSize, reload, search, filter]);
 
     const openInvoiceDetail = (invoiceId) => {
         setSelectedInvoiceId(invoiceId);
@@ -123,12 +127,43 @@ const Invoices = ({ page, reload }) => {
         if(page === 'payments') return 'Payments';
     }
 
+    const onApplyFilter = (filterData) => {
+        setFilter(filterData);
+        setVisibleFilter(false);
+    }
+
+    const onRemoveFilter = (key) => {
+        setFilter({
+            ...filter,
+            [key]: null
+        })
+    }
+
     return (
         <div>
             <div className="site-layout-background p-5 mt-1">
                 <Title level={3} style={{color: 'rgba(107, 114, 128, var(--tw-text-opacity))'}} className='border-b-2' >
                     {getPageName()}
                 </Title>
+                <div className='mb-2'>
+                    <Row className="w-full">
+                        <Col span={12}>
+                            <Input
+                                placeholder="Search..."
+                                value={search}
+                                onChange={e => setSearch(e.target.value)}
+                            />
+                        </Col>
+                        <Col span={3} className='ml-5'>
+                            <Button onClick={() => setVisibleFilter(!visibleFilter)} >
+                                Filter
+                            </Button>
+                        </Col>
+                        <Col span={24}>
+                            <SelectedFilters filters={filter} onRemoveFilter={onRemoveFilter}/>
+                        </Col>
+                    </Row>
+                </div>
                 <Row className="w-full">
                     <Col span={24}>
                         <Table
@@ -147,16 +182,18 @@ const Invoices = ({ page, reload }) => {
                              }}
                             rowKey={(record) => record.id + (new Date().getTime() + Math.random() * 10000)}
                         />
-                        {/* <Pagination
-                            current={currentPage}
-                            pageSize={pageSize}
-                            onChange={handlePageChange}
-                            onShowSizeChange={handlePageSizeChange}
-                            total={total}
-                        /> */}
                     </Col>
                 </Row> 
                 <InvoiceDetailsModal visible={visibleID} setVisible={setVisibleID} invoiceId={selectedInvoiceId} />
+                {visibleFilter &&
+                    <FilterModal
+                        visible={visibleFilter}
+                        onCancel={() => setVisibleFilter(false)}
+                        onOk={(data) => onApplyFilter(data)}
+                        page={page}
+                        filters={filter}
+                    />
+                }
             </div>
         </div>
     );

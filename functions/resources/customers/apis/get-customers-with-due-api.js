@@ -17,4 +17,4 @@ const get = async (req) => {
 }
 
 
-Route.withOutSecurity().noAuth().get('/customers/dues',get).bind();
+Route.withSecurity().noAuth().get('/customers/dues',get).bind();

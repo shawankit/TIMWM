@@ -11,16 +11,13 @@ const GetInvoicesQuery = require('../queries/get-invoices-query');
 
 const get = async (req) => {
 
-    const { type, search, offset, limit, date } = req.query;
+    const { type, search, offset, limit, filters } = req.query;
 
 
     logInfo('Request to fetch all invoices',{});
 
-    const response = await R.ifElse(
-        () => R.isNil(date),
-        () => db.find(new GetInvoicesQuery(type, search, offset, limit)),
-        () => db.find(new GetInvoicesByDateQuery(date))
-    )();
+    const parsedFilters = !R.isNil(filters) && !R.isEmpty(filters) && JSON.parse(filters); 
+    const response = await db.find(new GetInvoicesQuery(type, search, offset, limit, parsedFilters));
     
     return respond(response,'Successfully Fetched All invoices', 'Failed to fetch invoices')
 }

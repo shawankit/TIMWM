@@ -18,4 +18,4 @@ const get = async (req) => {
 }
 
 
-Route.withOutSecurity().noAuth().delete('/customers/:id',get).bind();
+Route.withSecurity().noAuth().delete('/customers/:id',get).bind();

@@ -14,7 +14,7 @@ module.exports = class GetCompaniesQuery {
         if (this.search) {
             condition = {
                 ...condition,
-                companyName: { [Op.iLike]: `%${this.search}%` }
+                name: { [Op.iLike]: `%${this.search}%` }
             };
         }
         return Company.findAndCountAll({

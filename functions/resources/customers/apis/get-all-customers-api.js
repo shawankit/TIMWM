@@ -4,17 +4,19 @@ const { respond } = require('lib');
 const uuid = require('uuid');
 const Result = require('folktale/result');
 const db = require('db/repository');
-const GetAllCustomerQuery = require('../queries/get-all-customers-queries');
+const GetCustomersQuery = require('../queries/get-customers-queries');
 
 
 const get = async (req) => {
 
+    const { type, search, offset, limit, filters } = req.query;
+
     logInfo('Request to fetch all customers',{});
 
-    const response = await db.find(new GetAllCustomerQuery());
+    const response = await db.find(new GetCustomersQuery(type, search, offset, limit, filters));
 
     return respond(response,'Successfully Fetched All customers', 'Failed to fetch customers')
 }
 
 
-Route.withOutSecurity().noAuth().get('/customers',get).bind();
+Route.withSecurity().noAuth().get('/customers',get).bind();

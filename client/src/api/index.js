@@ -55,10 +55,13 @@ export const userSession = (mobileNumber, otp) => API.post('/auth/mobile/user', 
 export const createSalesInBulk = (sales, type) => API.post('/sales', { sales, type }, { headers: getHeaders() });
 export const createReceiptsInBulk = (receipts, type) => API.post('/receipts', { receipts, type }, { headers: getHeaders() });
 
-export const getAllInvoices = (type, search, offset, limit) => API.get(UrlParamsReplace(`/invoices`, {}, { type, search, offset, limit }), { headers: getHeaders() });
+export const getAllInvoices = (type, search, offset, limit, filters) => API.get(UrlParamsReplace(`/invoices`, {}, { type, search, offset, limit, filters }), { headers: getHeaders() });
 export const getInvoiceById = (invoiceId) => API.get(`/invoices/${invoiceId}`, { headers: getHeaders() });
 export const getReports = (type) => API.get(`/reports?type=${type}`, { headers: getHeaders() });
 export const getFundsReports = (reportType, date, month, year) => API.get(UrlParamsReplace(`/fund-reports`, {}, { reportType, date, month, year }), { headers: getHeaders() });
 
-export const getAllReceipts = (type, search, offset, limit) => API.get(UrlParamsReplace(`/receipts`, {}, { type, search, offset, limit }), { headers: getHeaders() });
+export const getAllReceipts = (type, search, offset, limit, filters) => API.get(UrlParamsReplace(`/receipts`, {}, { type, search, offset, limit, filters }), { headers: getHeaders() });
 
+export const getCompanies = (search, offset, limit) => API.get(UrlParamsReplace(`/companies`, {}, { search, offset, limit }), { headers: getHeaders() });
+
+export const getCustomers = (type, search, offset, limit) => API.get(UrlParamsReplace(`/customers`, {}, { type, search, offset, limit }), { headers: getHeaders() });

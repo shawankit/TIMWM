@@ -6,7 +6,6 @@ const uuid = require('uuid');
 const Result = require('folktale/result');
 const db = require('db/repository');
 const CreateCustomerQuery = require('../queries/create-customer-query');
-const CreateBulkItemQuery = require('../../items/queries/create-bulk-items-query');
 
 const post = async (req) => {
     const { name , type, mobile, rates}
@@ -17,19 +16,11 @@ const post = async (req) => {
     const id = uuid.v4();
 
     const response = await composeResult(
-        (customer) => R.ifElse(
-            () => type === 'special',
-            () => composeResult(
-                () => Result.Ok(customer),
-                () => db.execute(new CreateBulkItemQuery(rates.map((rate) => ({...rate, customerId: id, id: uuid.v4()}))))
-            )(),
-            () => Result.Ok(customer)
-        )(),
         () => db.execute(new CreateCustomerQuery(id,name,type, mobile))
     )();
 
     return respond(response,'Successfully Created Customer', 'Failed to create customer')
 }
 
-Route.withOutSecurity().noAuth().post('/customers',post).bind();
+Route.withSecurity().noAuth().post('/customers',post).bind();
 

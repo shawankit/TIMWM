@@ -5,7 +5,7 @@ const Button = ({
   children,
   variant,
   fontWeight = "font-medium",
-  padding = "py-3 px-6",
+  padding = "py-2 px-3",
   btnClass = "",
   imgClassName = "",
   imgSrc,
@@ -25,7 +25,7 @@ const Button = ({
 
   const buttonStyle = {
     primaryBtn:
-      "flex items-center justify-center bg-yellow-500 rounded text-white text-base disabled:bg-primary-100 disabled:text-primary-300",
+      "flex items-center justify-center bg-blue-500 rounded text-white text-base disabled:bg-primary-100 disabled:text-primary-300",
     outlineBtn:
       "flex items-center justify-center bg-transparent border border-gray-200 rounded text-gray-500 text-base drop-shadow-btn disabled:bg-primary-100 disabled:text-primary-300",
     normalBtn: "flex items-center justify-center text-base",
@@ -37,7 +37,7 @@ const Button = ({
       variant={buttonType[variant]}
       className={`${
         buttonStyle[variant]
-      } ${fontWeight} ${padding} ${btnClass} ${imgSrc && "pl-4"}`}
+      } ${fontWeight} ${padding} ${btnClass} ${imgSrc && "pl-4"} `}
       onClick={onClick}
       disabled={disabled}
       form={form}

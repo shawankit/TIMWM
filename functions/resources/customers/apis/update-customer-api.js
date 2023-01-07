@@ -10,13 +10,13 @@ const UpdateCustomerQuery = require('../queries/update-customer-query');
 const post = async (req) => {
 
     const { id } = req.params; 
-    const { name , type, mobile , rates}
+    const { code, name , type, mobile, companyId, gstNumber }
      = req.body;
 
     logInfo('Request to update customer',name);
 
     const response = await composeResult(
-        () => db.execute(new UpdateCustomerQuery(id,name,type, mobile))
+        () => db.execute(new UpdateCustomerQuery(id,{ code, name , type, mobile, companyId, gstNumber }))
     )();
 
     return respond(response,'Successfully Updated Customer', 'Failed to update customer')

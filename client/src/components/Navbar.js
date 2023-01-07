@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Menu, Typography, Avatar } from 'antd';
 import { Link } from 'react-router-dom';
-import { HomeOutlined, MoneyCollectOutlined, FundOutlined, MenuOutlined, StrikethroughOutlined, FileExcelOutlined, BarChartOutlined, PieChartOutlined } from '@ant-design/icons';
+import { HomeOutlined, MoneyCollectOutlined, FundOutlined, MenuOutlined, StrikethroughOutlined, FileExcelOutlined, BarChartOutlined, PieChartOutlined, DatabaseOutlined, CustomerServiceOutlined, PayCircleOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 
 const Navbar = ({ collapsed }) => {
   const [activeMenu, setActiveMenu] = useState(true);
@@ -39,7 +39,7 @@ const Navbar = ({ collapsed }) => {
         <Button className="menu-control-container" onClick={() => setActiveMenu(!activeMenu)}><MenuOutlined /></Button>
       </div>
       {activeMenu && (
-      <Menu theme="dark" mode="inline" defaultOpenKeys={['reports']} defaultSelectedKeys={defaultSelectedKeys} subMenuOpenDelay={0.2}>
+      <Menu theme="dark" mode="inline" defaultOpenKeys={['reports', 'master-data']} defaultSelectedKeys={defaultSelectedKeys} subMenuOpenDelay={0.2}>
         <Menu.SubMenu key="reports" title={'Reports'} icon={<HomeOutlined />}>
           <Menu.Item  key="fund-reports" icon={<BarChartOutlined />}>
             <Link to="/">Fund Reports</Link>
@@ -63,6 +63,14 @@ const Navbar = ({ collapsed }) => {
         <Menu.Item icon={<StrikethroughOutlined />} key='payments'>
           <Link to="/payments">Payments</Link>
         </Menu.Item>
+        <Menu.SubMenu key="master-data" title={'Master Data'} icon={<DatabaseOutlined />}>
+          <Menu.Item  key="customers" icon={<UsergroupAddOutlined />}>
+            <Link to="/customers">Customers</Link>
+          </Menu.Item>
+          <Menu.Item  key="vendors" icon={<PayCircleOutlined />}>
+            <Link to="/vendors">Vendors</Link>
+          </Menu.Item>
+        </Menu.SubMenu>
       </Menu>
       )}
     </div>

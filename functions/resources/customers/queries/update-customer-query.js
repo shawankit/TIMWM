@@ -2,12 +2,9 @@ const { Customer } = require("../../../models");
 
 
 module.exports = class UpdateCustomerQuery {
-    constructor(id,name,type,mobile){
+    constructor(id,{ code, name , type, mobile, companyId, gstNumber }){
         this.details = {
-            id,
-            name,
-            type,
-            mobile
+            id, code, name , type, mobile, companyId, gstNumber
         }
     }
 
@@ -19,8 +16,10 @@ module.exports = class UpdateCustomerQuery {
         });
 
         customer.name = this.details.name;
-        customer.type = this.details.type;
+        customer.name = this.details.name;
+        customer.companyId = this.details.companyId;
         customer.mobile = this.details.mobile;
+        customer.gstNumber = this.details.gstNumber;
 
         return customer.save();
     }

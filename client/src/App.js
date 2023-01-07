@@ -7,8 +7,9 @@ import { Avatar, Breadcrumb, Layout, Menu } from 'antd';
 import { Homepage, LoginTemplate, Navbar } from './components';
 import { AppstoreOutlined, MailOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import { getAuth, removeAuth } from './api';
-import BulkUploadForm from './components/UploadForm';
 import FundReport from './components/FundReport';
+import Page from './components/Page';
+import Customer from './components/Customer';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -68,16 +69,22 @@ const App = () => {
                 <Homepage page={'purchase'}/>
               </Route>
               <Route exact path="/sales">
-                <BulkUploadForm  page={'sales'} />
+                <Page  page={'sales'} />
               </Route>
               <Route exact path="/purchases">
-                <BulkUploadForm  page={'purchase'} />
+                <Page  page={'purchase'} />
               </Route>
               <Route exact path="/receipts">
-                <BulkUploadForm  page={'receipts'} />
+                <Page  page={'receipts'} />
               </Route>
               <Route exact path="/payments">
-                <BulkUploadForm  page={'payments'} />
+                <Page  page={'payments'} />
+              </Route>
+              <Route exact path="/customers">
+                <Page page={'customer'}/>
+              </Route>
+              <Route exact path="/vendors">
+                <Page page={'vendor'}/>
               </Route>
             </Switch>
           </div>

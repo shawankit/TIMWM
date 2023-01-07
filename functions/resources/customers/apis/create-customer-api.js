@@ -8,7 +8,7 @@ const db = require('db/repository');
 const CreateCustomerQuery = require('../queries/create-customer-query');
 
 const post = async (req) => {
-    const { name , type, mobile, rates}
+    const { code, name , type, mobile, companyId, gstNumber }
      = req.body;
 
     logInfo('Request to create customer',name);
@@ -16,7 +16,7 @@ const post = async (req) => {
     const id = uuid.v4();
 
     const response = await composeResult(
-        () => db.execute(new CreateCustomerQuery(id,name,type, mobile))
+        () => db.execute(new CreateCustomerQuery({ id, code, name , type, mobile, companyId, gstNumber } ))
     )();
 
     return respond(response,'Successfully Created Customer', 'Failed to create customer')

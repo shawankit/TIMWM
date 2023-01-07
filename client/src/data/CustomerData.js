@@ -1,6 +1,12 @@
 const CustomerData = [
     {
-        label : "Name",
+        label : "Customer Code",
+        name: 'code',
+        type: 'input',
+        inputType: 'text'
+    },
+    {
+        label : "Customer Name",
         name: 'name',
         type: 'input',
         inputType: 'text'
@@ -12,11 +18,17 @@ const CustomerData = [
         inputType: 'text'
     },
     {
-        label : "Type",
-        name: 'type',
+        label : "Division",
+        name: 'companyId',
         type: 'select',
         inputType: 'text',
-        list: "customerType"
+        list: "divisions"
+    },
+    {
+        label : "GST Number",
+        name: 'gstNumber',
+        type: 'input',
+        inputType: 'text',
     }
 ];
 

@@ -57,6 +57,9 @@ export const createReceiptsInBulk = (receipts, type) => API.post('/receipts', { 
 
 export const getAllInvoices = (type, search, offset, limit, filters) => API.get(UrlParamsReplace(`/invoices`, {}, { type, search, offset, limit, filters }), { headers: getHeaders() });
 export const getInvoiceById = (invoiceId) => API.get(`/invoices/${invoiceId}`, { headers: getHeaders() });
+export const createInvoice = (invoice) => API.post("/invoices", invoice, { headers: getHeaders() });
+export const updateInvoice = (invoice) => API.put(`/invoices/${id}`, invoice, { headers: getHeaders() });
+
 export const getReports = (type) => API.get(`/reports?type=${type}`, { headers: getHeaders() });
 export const getFundsReports = (reportType, date, month, year) => API.get(UrlParamsReplace(`/fund-reports`, {}, { reportType, date, month, year }), { headers: getHeaders() });
 
@@ -65,3 +68,7 @@ export const getAllReceipts = (type, search, offset, limit, filters) => API.get(
 export const getCompanies = (search, offset, limit) => API.get(UrlParamsReplace(`/companies`, {}, { search, offset, limit }), { headers: getHeaders() });
 
 export const getCustomers = (type, search, offset, limit) => API.get(UrlParamsReplace(`/customers`, {}, { type, search, offset, limit }), { headers: getHeaders() });
+
+export const createCustomer = (customer) => API.post("/customers", customer, { headers: getHeaders() });
+export const updateCustomer = (id, customer) => API.put(`/customers/${id}`, customer, { headers: getHeaders() });
+export const deleteCustomer= (id) => API.delete(`/customers/${id}`, { headers: getHeaders() });

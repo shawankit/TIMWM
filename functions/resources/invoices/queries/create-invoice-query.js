@@ -2,13 +2,11 @@ const { Invoice } = require("./../../../models");
 
 
 module.exports = class CreateInvoiceQuery {
-    constructor(id,invoiceNo,customerId,total,invoiceDate){
+    constructor({ 
+        id, type, invoiceNumber, customerId, invoiceDate, companyId, labourCharges, claimAmount, taxableAmount, igst, cgst, sgst, cess, roundOff, tcs, totalValue
+    }){
         this.details = {
-            id,
-            invoiceNo,
-            customerId,
-            total,
-            invoiceDate
+            id, type, invoiceNumber, customerId, invoiceDate, companyId, labourCharges, claimAmount, taxableAmount, igst, cgst, sgst, cess, roundOff, tcs, totalValue
         }
     }
 

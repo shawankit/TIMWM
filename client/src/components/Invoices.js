@@ -1,25 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import millify from 'millify';
 import { Typography, Row, Col, Statistic, Table, Button, Pagination, Input } from 'antd';
-import { getAllInvoices, getAllReceipts } from '../api';
-import InvoiceData from '../data/InvoiceData';
-import moment from 'moment';
 import InvoiceDetailsModal from './Modal/InvoiceDetailModal';
-import ReceiptData from '../data/ReceiptData';
 import Search from 'antd/lib/transfer/search';
 import FilterModal from './Modal/FilterModal';
 import SelectedFilters from './Modal/SelectedFilters';
+import { getApiFn, getFieldData, getPageName, getTitle, mappingData, sweetalertMessage, sweetalertOkCancel, sweetalertValidate } from '../util/util';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { deleteCustomer } from '../api';
 
 const { Title } = Typography;
 
-const Invoices = ({ page, reload }) => {
+const Invoices = ({ page, reload, setEditData, setReload }) => {
 
     const [invoices, setInvoices] = useState(null);
     const [visibleID, setVisibleID] = useState(false);
     const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(20);
     const [total, setTotal] = useState(0);
 
     const [search, setSearch] = useState('');
@@ -27,19 +26,10 @@ const Invoices = ({ page, reload }) => {
     const [visibleFilter, setVisibleFilter] = useState(false);
 
     const fetchInvoices = async () => {
-        const getApi = page == 'receipts' || page == 'payments'? getAllReceipts : getAllInvoices; 
+        const getApi = getApiFn(page); 
         const response = await getApi(page, search, (currentPage - 1) * pageSize, pageSize , JSON.stringify(filter));
         
-        setInvoices(response?.data?.entity.rows.map((inv) => ({
-            ...inv,
-            invoiceNumber:  page == 'receipts' || page == 'payments' ? inv.invoice?.invoiceNumber : inv.invoiceNumber,
-            customerName: inv.customer?.name,
-            customerCode: inv.customer?.code,
-            invoiceDate: inv.invoiceDate? moment(inv.invoiceDate).format('DD-MM-YYYY') : null,
-            companyName: inv.company.name,
-            division: inv.company.division,
-            receiptDate: inv.receiptDate? moment(inv.receiptDate).format('DD-MM-YYYY') : null,
-        })));
+        setInvoices(response?.data?.entity.rows.map((data) => mappingData(page, data)));
         setTotal(response?.data?.entity.count);
     }
 
@@ -52,56 +42,87 @@ const Invoices = ({ page, reload }) => {
         setVisibleID(true);  
     }
 
-    const getRender = (column) => {
-        if(column.name == 'invoiceNumber'){
-            return {
-                render: (invoiceNumber, data) => {
+    const onEdit = (data) => {
+        setEditData({...data})
+    }
+
+    const  onDelete = async (data) => {
+        sweetalertOkCancel(
+            'Are you sure you want to delete ?',
+            async () => {
+                const response = await deleteCustomer(data.id);
+                if(response?.data?.status){
+                    sweetalertMessage('Succesfully Deleted')
+                }
+                else{
+                    sweetalertValidate('OOPS!! Something went wrong')
+                }
+                setReload(!reload);
+            },
+            () => {}
+        )
+    }
+
+    const getRender = (column, page) => {
+        return {
+            render: (value, data) => {
+                if(column.name == 'invoiceNumber'){
                     const invoiceId =  page == 'receipts' || page == 'payments' ? data.invoice?.id : data.id;
                     return (
                         <div>
                             <a onClick={() => openInvoiceDetail(invoiceId)} className='underline text-blue-900'>
-                            { invoiceNumber }
+                            { value }
                             </a>
                         </div>
                     )
                 }
-            }
-        }
-        if(column.inputType === 'number'){
-            return {
-                render: (number, data) => {
+                if(column.inputType === 'number'){
                     return (
                         <div>
-                            { number ? number.toLocaleString('en-IN') : number } 
+                            { value ? value.toLocaleString('en-IN') : value } 
                         </div>
                     )
-                } 
-            }
-        }
-        return {};
-    }
-    const getTitle = (column) => {
-        if((page == 'purchase' || page == 'payments') && (column.name == 'customerName' || column.name == 'customerCode')){
-           return column.label.replace('Customer','Vendor');
-        }
-        if(page == 'payments' && (column.name == 'receiptDate' || column.name == 'via')){
-            return column.label.replace('Receipt','Payment');
-        }
+                        
+                }
 
-        return  column.label;
+                if(column.name === 'companyId'){
+                    return `${data.company.division} - ${data.company.name}` 
+                }
+                return value
+            }
+        };
     }
-    const fieldData = page == 'receipts' || page == 'payments'? ReceiptData : InvoiceData; 
+    const fieldData = getFieldData(page); 
     const columns = fieldData.map((column) => ({
         title:  ( 
             <Typography.Text ellipsis={true} title={column.label}>
-                {getTitle(column)}
+                {getTitle(column, page)}
             </Typography.Text>
         ),
         dataIndex: column.name,
         key: column.name,
         width: '150px',
-        ...getRender(column)
+        ...getRender(column, page)
     }));
+
+    columns.push({
+        title: 'Action',
+        key: 'operation',
+        width: '100px',
+        render: (data) => {
+            return (
+                <div className="float-right">
+                    <Button key={'edit'+data.id} type="primary" onClick={() => onEdit(data)} title="Edit">
+                        <EditOutlined />
+                    </Button>
+                    
+                    <Button key={'delete'+data.id} type="secondary" onClick={() => onDelete(data)} className="ml-2" title="Delete">
+                        <DeleteOutlined />
+                    </Button>
+                </div>
+            );
+        },
+    });
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -120,12 +141,6 @@ const Invoices = ({ page, reload }) => {
         initpageSizeOptions.shift();
     }
     if(total > 10) pageSizeOptions.push( total + '');
-    const getPageName = () => {
-        if(page === 'sales') return 'Sale Invoices';
-        if(page === 'purchases') return 'Purchase Invoices';
-        if(page === 'receipts') return 'Receipts';
-        if(page === 'payments') return 'Payments';
-    }
 
     const onApplyFilter = (filterData) => {
         setFilter(filterData);
@@ -143,7 +158,7 @@ const Invoices = ({ page, reload }) => {
         <div>
             <div className="site-layout-background p-5 mt-1">
                 <Title level={3} style={{color: 'rgba(107, 114, 128, var(--tw-text-opacity))'}} className='border-b-2' >
-                    {getPageName()}
+                    {getPageName(page)}
                 </Title>
                 <div className='mb-2'>
                     <Row className="w-full">
@@ -173,7 +188,7 @@ const Invoices = ({ page, reload }) => {
                             pagination={{ 
                                 position: ['bottomRight', 'topRight'], 
                                 pageSizeOptions,
-                                ocurrent: currentPage,
+                                current: currentPage,
                                 pageSize: pageSize,
                                 onChange: handlePageChange,
                                 onShowSizeChange: handlePageSizeChange,

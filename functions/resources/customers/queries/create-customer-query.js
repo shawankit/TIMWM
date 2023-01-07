@@ -2,12 +2,9 @@ const { Customer } = require("./../../../models");
 
 
 module.exports = class CreateCustomerQuery {
-    constructor(id,name,type,mobile){
+    constructor({ id, code, name , type, mobile, companyId, gstNumber }){
         this.details = {
-            id,
-            name,
-            type,
-            mobile
+            id, code, name , type, mobile, companyId, gstNumber 
         }
     }
 

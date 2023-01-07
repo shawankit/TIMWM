@@ -1,5 +1,4 @@
 import ListValidationErrors from "./CSVComponent/ListValidationErrors";
-import Button from "../atoms/Button";
 import Card from "../atoms/Card";
 import InputLabel from "../atoms/InputLabel";
 import Text from "../atoms/Text";
@@ -8,18 +7,16 @@ import DownloadCsv from "./CSVComponent/DownloadCsv";
 import IconWithHeading from "../molecules/IconWithHeading";
 import { GlobalOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
-import { Breadcrumb } from "antd";
 import { createReceiptsInBulk, createSalesInBulk } from "../api";
-import Invoices from "./Invoices";
+import { sweetalertMessage, sweetalertValidate } from "../util/util";
 
-const BulkUploadForm = ({ page }) => {
+const BulkUploadForm = ({ page, setReload }) => {
 
     const [csvArray, setCsvArray] = useState(null);
     const [csvErrors, setCsvErrors] = useState([]);
     const [hasErrors, setHasErrors] = useState(false);
     const [invalidHeader, setInvalidHeader] = useState([]);
     const [record, setRecord] = useState(null);
-    const [reload, setReload] = useState(false);
 
     const [validatedData, setValidatedData] = useState(false);
 
@@ -54,9 +51,10 @@ const BulkUploadForm = ({ page }) => {
            else{
             setCsvErrors([]);
             setReload(true);
+            sweetalertMessage('Succesfully Uploaded')
            }
         } else {
-           
+          sweetalertValidate('OOPS!! Something went wrong')
         }
            
     };
@@ -73,9 +71,6 @@ const BulkUploadForm = ({ page }) => {
    
   return (
     <div className="scr">
-      <Breadcrumb style={{ margin: '16px 0'}} className="text-4xl font-bold">
-        <Breadcrumb.Item>{page.toUpperCase()}</Breadcrumb.Item>
-      </Breadcrumb>
       <Card cardClass="mt-6 mb-4 flex" cardPadding="px-6">
         <div className="w-2/5 py-8">
           <IconWithHeading
@@ -139,7 +134,7 @@ const BulkUploadForm = ({ page }) => {
         </Card>
       )}
 
-      <Invoices page={page} reload={reload}/>
+      {/* <Invoices page={page} reload={reload}/> */}
     </div>
   );
 };

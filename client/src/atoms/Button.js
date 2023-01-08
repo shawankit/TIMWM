@@ -21,10 +21,13 @@ const Button = ({
     primaryBtn: "primaryBtn",
     outlineBtn: "outlineBtn",
     normalBtn: "normalBtn",
+    secondaryBtn: 'secondaryBtn'
   };
 
   const buttonStyle = {
     primaryBtn:
+      "flex items-center justify-center bg-yellow-500 rounded text-white text-base disabled:bg-primary-100 disabled:text-primary-300",
+    secondaryBtn:
       "flex items-center justify-center bg-blue-500 rounded text-white text-base disabled:bg-primary-100 disabled:text-primary-300",
     outlineBtn:
       "flex items-center justify-center bg-transparent border border-gray-200 rounded text-gray-500 text-base drop-shadow-btn disabled:bg-primary-100 disabled:text-primary-300",
@@ -37,7 +40,7 @@ const Button = ({
       variant={buttonType[variant]}
       className={`${
         buttonStyle[variant]
-      } ${fontWeight} ${padding} ${btnClass} ${imgSrc && "pl-4"} `}
+      } ${fontWeight} ${padding} ${btnClass} ${imgSrc && "pl-4 bg-red"} `}
       onClick={onClick}
       disabled={disabled}
       form={form}

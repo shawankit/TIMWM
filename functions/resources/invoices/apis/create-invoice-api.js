@@ -16,7 +16,7 @@ const post = async (req) => {
         transactions 
     } = req.body;
 
-    logInfo('Request to create invoices',{ customerId , total, transactions, invoiceDate });
+    logInfo('Request to create invoices',{ customerId , totalValue, transactions, invoiceDate });
 
     const id = uuid.v4();
 

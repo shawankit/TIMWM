@@ -1,4 +1,4 @@
-const { Invoice, Customer, Item, Transaction } = require("../../../models");
+const { Invoice, Customer, Item, Transaction, Receipt } = require("../../../models");
 
 module.exports = class GetAInvoiceQuery {
     constructor(id){
@@ -22,7 +22,12 @@ module.exports = class GetAInvoiceQuery {
                 {
                     model: Customer,
                     as: 'customer'
-                }
+                },
+                {
+                    model: Receipt,
+                    as: 'receipts',
+                    attributes: ['id']
+                },
             ]
         });
     }

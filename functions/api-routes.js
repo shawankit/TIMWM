@@ -4,3 +4,4 @@ require('./resources/invoices/invoices-routes');
 require('./resources/receipts/receipts-routes');
 require('./resources/company/company-routes');
 require('./resources/customers/customers-routes');
+require('./resources/items/item-routes');

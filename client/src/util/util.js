@@ -1,6 +1,6 @@
 import moment from 'moment';
 import swal from 'sweetalert';
-import { getAllInvoices, getAllReceipts, getCustomers } from '../api';
+import { deleteCustomer, deleteInvoice, deleteReceipt, getAllInvoices, getAllReceipts, getCustomers } from '../api';
 import ReceiptData from '../data/ReceiptData';
 import InvoiceData from '../data/InvoiceData';
 import CustomerData from '../data/CustomerData';
@@ -203,5 +203,17 @@ export const isUploadButton = (page) => {
     }
     if(page == 'customer' || page == 'vendor'){
         return false;
+    }
+}
+
+export const deleteApiFn = (page) => {
+    if(page == 'receipts' || page == 'payments'){ 
+        return deleteReceipt;
+    }
+    if(page == 'purchase' || page == 'sales'){
+        return deleteInvoice;
+    }
+    if(page == 'customer' || page == 'vendor'){
+        return deleteCustomer;
     }
 }

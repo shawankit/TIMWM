@@ -5,7 +5,7 @@ import InvoiceDetailsModal from './Modal/InvoiceDetailModal';
 import Search from 'antd/lib/transfer/search';
 import FilterModal from './Modal/FilterModal';
 import SelectedFilters from './Modal/SelectedFilters';
-import { getApiFn, getFieldData, getPageName, getTitle, mappingData, sweetalertMessage, sweetalertOkCancel, sweetalertValidate } from '../util/util';
+import { deleteApiFn, getApiFn, getFieldData, getPageName, getTitle, mappingData, sweetalertMessage, sweetalertOkCancel, sweetalertValidate } from '../util/util';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { deleteCustomer } from '../api';
 
@@ -50,11 +50,13 @@ const Invoices = ({ page, reload, setEditData, setReload }) => {
         sweetalertOkCancel(
             'Are you sure you want to delete ?',
             async () => {
-                const response = await deleteCustomer(data.id);
+                const deleteApi = deleteApiFn(page);
+                const response = await deleteApi(data.id);
                 if(response?.data?.status){
                     sweetalertMessage('Succesfully Deleted')
                 }
                 else{
+                    console.log('err', response)
                     sweetalertValidate('OOPS!! Something went wrong')
                 }
                 setReload(!reload);

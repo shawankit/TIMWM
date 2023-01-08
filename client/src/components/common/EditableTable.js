@@ -1,16 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Button, Form, Input, Popconfirm, Select, Table } from 'antd';
 
-const EditableContext = React.createContext(null);
-
 const EditableRow = ({ index, ...props }) => {
-  const [form] = Form.useForm();
   return (
-    <Form form={form} component={false}>
-      <EditableContext.Provider value={form}>
-        <tr {...props} />
-      </EditableContext.Provider>
-    </Form>
+      <tr {...props} />
   );
 };
 
@@ -21,72 +14,61 @@ const EditableCell = ({
   dataIndex,
   record,
   handleSave,
-  customerData,
-  milk,
+  items,
+  handleTaxInput,
   ...restProps
 }) => {
-    const [editing, setEditing] = useState(false);
-    const inputRef = useRef(null);
-    const form = useContext(EditableContext);
-    
-    useEffect(() => {
-        if (editing) {
-            inputRef.current.focus();
-        }
-    }, [editing]);
-
-    const toggleEdit = () => {
-        // setEditing(!editing);
-        form.setFieldsValue({
-        [dataIndex]: record[dataIndex],
-        });
-    };
+  
 
 
   const onSave = (name, value) => {
-    let newValues = {};
-    if( dataIndex === 'categoryName'){
-        const gstRate = customerData.type == 'special' ? milk[value].normal.gstRate : milk[value].gstRate;
-        newValues = { categoryName: milk[value].name, categoryId: value, rate: milk[value].rate, gstRate };
-        if(record.quantity != undefined){
-          newValues.total = Math.round(parseFloat(newValues.rate) * parseFloat(record.quantity) * 10) / 10;
-          newValues.totalWithTax = Math.round((newValues.total + (newValues.total * newValues.gstRate) / 100) * 10) / 10;
-        }
-    }
+    if(!record.taxRow){
+      let newValues = {};
+      if( dataIndex === 'categoryName'){
+          newValues = { categoryName: items[value].name, itemId: value, rate: items[value].rate, itemCode: items[value].code };
+          if(record.quantity != undefined){
+            newValues.total = Math.round(parseFloat(newValues.rate) * parseFloat(record.quantity) * 10) / 10;
+          }
+      }
 
-    if(dataIndex == 'quantity' && record.rate != undefined){
-      newValues = { quantity: value };
-      newValues.total =  Math.round(parseFloat(record.rate) * parseFloat(value) * 10) / 10;
-      newValues.totalWithTax = Math.round((newValues.total + (newValues.total * record.gstRate) / 100) * 10) / 10 ;
-    }
+      if(dataIndex == 'quantity' && record.rate != undefined){
+        newValues = { quantity: value };
+        newValues.total =  Math.round(parseFloat(record.rate) * parseFloat(value) * 10) / 10;
+      }
 
-    handleSave({ ...record, ...newValues });
+    
+      handleSave({ ...record, ...newValues });
+    }
+    else{
+      handleTaxInput({ ...record, total: value });
+    }
+    
   }
 
     let childNode = children;
-
-    if (editable) {
+    
+    let edit = false;
+    if(dataIndex == 'total' && record?.taxRow && editable){
+      edit = true;
+    }
+    else if(dataIndex == 'total' && !record?.taxRow){
+      edit = false;
+    }
+    else{
+      edit = editable  && !record.taxRow;
+    }
+    if (edit) {
         //childNode = editing ? (
-        childNode = record.categoryName != 'Total Amount' ?  ( <Form.Item
-            style={{
-            margin: 0,
-            }}
-            name={dataIndex}
-            rules={[
-            {
-                required: true,
-                message: `${title} is required.`,
-            },
-            ]}
-        >
-            { dataIndex !== 'categoryName' ? 
-                <Input onChange={(e) => onSave(dataIndex, e.target.value)} /> :
+        //if(dataIndex == 'total') console.log(record, record[dataIndex]);
+        childNode = record.categoryName != 'Total Amount' && record.categoryName != 'Taxable Value'?  ( 
+            <>{ dataIndex !== 'categoryName' ? 
+                <Input className="w-full" onChange={(e) => onSave(dataIndex, e.target.value)} value={record[dataIndex]}/> :
                 <Select
-                    label={'Customer'}
-                    editable
+                    placeholder={'Select Items'}
                     showSearch
                     optionFilterProp="children"
                     showArrow={false}
+                    value={record?.itemId}
                     onChange={(value) => onSave(dataIndex, value)}
                     filterOption={(input, option) =>
                         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -94,13 +76,13 @@ const EditableCell = ({
                     filterSort={(optionA, optionB) =>
                         optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
                     }
-                    key={'customerId'}
+                    key={'itemId'}
+                    className="w-full"
                 >
-                    { Object.values(milk).map((ele,index) => <Option value={ele.id} key={index}>{ele.name}</Option>) }
+                    { Object.values(items).map((ele,index) => <Option value={ele.id} key={index}>{ ele.name}</Option>) }
                 </Select>
             }
-        </Form.Item>
-        ) : (
+        </>) : (
         <div
             className="editable-cell-value-wrap font-bold"
             style={{
@@ -116,17 +98,19 @@ const EditableCell = ({
     return <td {...restProps}>{childNode}</td>;
 };
 
-const EditableTable = ({ setTransactions, customerData, transactions, milk, notEditable, invoiceDetails }) => {
+const EditableTable = ({ setTransactions, transactions, items, notEditable, invoiceDetails, setParentTaxableRows }) => {
   const [dataSource, setDataSource] = useState([]);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    setDataSource(transactions);
+    setDataSource(transactions || []);
   },[transactions])
 
   const handleDelete = (key) => {
     const newData = dataSource.filter((item) => item.key !== key);
+    // console.log('handleDelete', newData);
     setDataSource(newData);
+    setTransactions(newData);
   };
 
   const numberRender = (number, data) => {
@@ -147,8 +131,7 @@ const EditableTable = ({ setTransactions, customerData, transactions, milk, notE
     {
       title: 'Item Code',
       dataIndex: 'itemCode',
-      width: '15%',
-      editable: !notEditable
+      width: '15%'
     },
     {
       title: 'Rate',
@@ -166,18 +149,9 @@ const EditableTable = ({ setTransactions, customerData, transactions, milk, notE
       title: 'Total',
       dataIndex: 'total',
       width: '20%',
-      render: numberRender
+      render: numberRender,
+      editable: !notEditable
     },
-    // {
-    //   title: 'GST Rate (%)',
-    //   dataIndex: 'gstRate',
-    //   width: '10%',
-    // },
-    // {
-    //   title: 'Total( inc. tax)',
-    //   dataIndex: 'totalWithTax',
-    //   width: '10%',
-    // },
   ];
 
   if(!notEditable){
@@ -186,11 +160,11 @@ const EditableTable = ({ setTransactions, customerData, transactions, milk, notE
       dataIndex: 'operation',
       width: '5%',
       render: (_, record) =>
-       record.categoryName !== 'Total Amount' ? dataSource.length >= 1 ? (
+       !record.taxRow && (
           <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)}>
             <a>Delete</a>
           </Popconfirm>
-        ) : null : null,
+        ),
     })
   }
 
@@ -201,8 +175,6 @@ const EditableTable = ({ setTransactions, customerData, transactions, milk, notE
       rate: '0',
       quantity: `0`,
       total: 0,
-      gstRate: 0,
-      totalWithTax: 0
     };
     setDataSource([...dataSource, newData]);
     setCount(count + 1);
@@ -213,8 +185,64 @@ const EditableTable = ({ setTransactions, customerData, transactions, milk, notE
     const index = newData.findIndex((item) => row.key === item.key);
     const item = newData[index];
     newData.splice(index, 1, { ...item, ...row });
-    setDataSource(newData);
+    // setDataSource(newData);
     setTransactions(newData);
+  };
+
+  // console.log(invoiceDetails, notEditable)
+  let staticRowCount = 2;
+  const igstRow = {
+    key: 'taxRow' + staticRowCount++,
+    categoryName: `IGST`,
+    taxRow: true,
+    fieldName: 'igst',
+    total: invoiceDetails.igst || 0 
+  }
+
+  const cgstRow = {
+    key: 'taxRow' + staticRowCount++,
+    categoryName: `CGST`,
+    taxRow: true,
+    fieldName: 'cgst',
+    total: invoiceDetails.cgst || 0
+  }
+
+  const sgstRow = {
+    key: 'taxRow' + staticRowCount++,
+    categoryName: `SGST`,
+    taxRow: true,
+    fieldName: 'sgst',
+    total: invoiceDetails.sgst || 0
+  }
+
+  const cess = {
+    key: 'taxRow' + staticRowCount++,
+    categoryName: `Cess`,
+    taxRow: true,
+    fieldName: 'cess',
+    total: invoiceDetails.cess || 0
+  }
+
+  const roundOff = {
+    key: 'taxRow' + staticRowCount++,
+    categoryName: `Round Off`,
+    taxRow: true,
+    fieldName: 'roundOff',
+    total: invoiceDetails.roundOff || 0
+  }
+
+  const [taxaRowsData, setTaxRowsData] = useState([igstRow, cgstRow, sgstRow, cess, roundOff]);
+  useEffect(()=> {
+    setTaxRowsData([ ...taxaRowsData.map((_obj) => ({ ..._obj,  total: invoiceDetails[_obj.fieldName] || 0 }))]);
+  }, [invoiceDetails])
+
+  const handleTaxInput = (row) => {
+    const newData = [...taxaRowsData];
+    const index = newData.findIndex((item) => row.key === item.key);
+    const item = newData[index];
+    newData.splice(index, 1, { ...item, ...row });
+    setTaxRowsData(newData);
+    setParentTaxableRows(newData);
   };
 
   const components = {
@@ -251,8 +279,8 @@ const EditableTable = ({ setTransactions, customerData, transactions, milk, notE
             dataIndex: col.dataIndex,
             title: col.title,
             handleSave,
-            customerData,
-            milk,
+            items,
+            handleTaxInput,
             ...__
           })
         },
@@ -261,55 +289,25 @@ const EditableTable = ({ setTransactions, customerData, transactions, milk, notE
 
   
 
-  let staticRowCount = 2;
+  const taxableAmount = dataSource.reduce((total, record) => total + record.total, 0 );
+  const taxSum = taxaRowsData.reduce((total, record) => total + parseFloat(record.total || 0) , 0 );
   const taxableRow = {
-    key: count + staticRowCount++,
+    key: 'taxRow' + staticRowCount++,
     categoryName: `Taxable Value`,
-    total: invoiceDetails.taxableAmount,
-    render: numberRender
+    total: notEditable ? invoiceDetails.taxableAmount : taxableAmount,
+    render: numberRender,
+    taxRow: true,
   }
 
-  const igstRow = {
-    key: count + staticRowCount++,
-    categoryName: `IGST`,
-    total: invoiceDetails.igst
-  }
-
-  const cgstRow = {
-    key: count + staticRowCount++,
-    categoryName: `CGST`,
-    total: invoiceDetails.cgst
-  }
-
-  const sgstRow = {
-    key: count + staticRowCount++,
-    categoryName: `SGST`,
-    total: invoiceDetails.sgst
-  }
-
-  const cess = {
-    key: count + staticRowCount++,
-    categoryName: `Cess`,
-    total: invoiceDetails.cess
-  }
-
-  const roundOff = {
-    key: count + staticRowCount++,
-    categoryName: `Round Off`,
-    total: invoiceDetails.roundOff
-  }
-
-  // const tcs = {
-  //   key: count + staticRowCount++,
-  //   categoryName: `TCS`,
-  //   total: invoiceDetails.tcs
-  // }
 
   const totalRow = {
-    key: count + staticRowCount++,
+    key: 'taxRow' + staticRowCount++,
     categoryName: `Total Amount`,
-    total: invoiceDetails.totalValue
+    taxRow: true,
+    total: notEditable ? invoiceDetails.totalValue  : (taxableAmount + taxSum) 
   }
+
+  // console.log(taxaRowsData);
   return (
     <div>
       { !notEditable ? 
@@ -326,7 +324,7 @@ const EditableTable = ({ setTransactions, customerData, transactions, milk, notE
         components={components}
         rowClassName={() => 'editable-row'}
         bordered
-        dataSource={[...dataSource,taxableRow, igstRow, cgstRow, sgstRow, cess, roundOff, totalRow]}
+        dataSource={[...dataSource,taxableRow, ...taxaRowsData, totalRow]}
         columns={columns}
         pagination={false}
       />

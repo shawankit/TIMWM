@@ -7,6 +7,7 @@ import { CloseCircleOutlined, PlusCircleOutlined, UploadOutlined } from '@ant-de
 import Button from '../atoms/Button';
 import { getPageName, isUploadButton } from '../util/util';
 import CustomerForm from './Forms/CustomerForm';
+import InvoiceForm from './Forms/InvoiceForm';
 const { Title } = Typography;
 
 const Page = ({ page }) => {
@@ -19,6 +20,7 @@ const Page = ({ page }) => {
         setUpload(false);
         setShowAdd(false);
         setReload(false);
+        setEditData(null);
     }, [page])
     return (
     <>
@@ -27,8 +29,8 @@ const Page = ({ page }) => {
         </Breadcrumb>
         <div className='relative flex'>
             <Button 
-                type="primaryBtn"
-                variant="primaryBtn"
+                type="secondaryBtn"
+                variant="secondaryBtn"
                 btnClass="text-sm font-normal ml-2 px-3"
                 onClick={() => setShowAdd(!showAdd)}
             >
@@ -51,9 +53,17 @@ const Page = ({ page }) => {
         { upload && <BulkUploadForm  page={page} setReload={setReload}/>}
 
         {showAdd && 
-            <div className="site-layout-background p-5">
-                <Title level={3} style={{color: 'rgba(107, 114, 128, var(--tw-text-opacity))'}} className='border-b-2' >{editData ? 'Edit' : 'Add'} {getPageName(page)} { editData ? `(${editData.name})`: '' }</Title>
+            <div className="site-layout-background p-5" id='form-div'>
+                <Title level={3} style={{color: 'rgba(107, 114, 128, var(--tw-text-opacity))'}} className='border-b-2' >{editData ? 'Edit' : 'Add'} {getPageName(page)}</Title>
                 { (page === 'customer' || page == 'vendor') && <CustomerForm 
+                        data={editData}
+                        callback={() => setReload(!reload)}
+                        setEditData={setEditData}
+                        page={page}
+                    />
+                }
+
+                { (page === 'sales' || page == 'purchase') && <InvoiceForm 
                         data={editData}
                         callback={() => setReload(!reload)}
                         setEditData={setEditData}
@@ -69,6 +79,7 @@ const Page = ({ page }) => {
                 setEditData={(value) => { 
                     setEditData(value);
                     setShowAdd(true);
+                    setTimeout(() => document.getElementById('form-div').scrollIntoView(), 2);
                 }}
                 setReload={setReload}/>
         </div>

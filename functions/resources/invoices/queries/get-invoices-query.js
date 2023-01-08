@@ -1,4 +1,4 @@
-const { Invoice, Customer, Transaction, Company } = require("../../../models");
+const { Invoice, Customer, Transaction, Company, Item } = require("../../../models");
 const { Op } = require('sequelize');
 module.exports = class GetInvoicesQuery {
     constructor(type, search, offset = 0, limit, filters){
@@ -53,12 +53,18 @@ module.exports = class GetInvoicesQuery {
                 },
                 {
                     model: Transaction,
-                    as: 'transactions'
+                    as: 'transactions',
+                    include: [
+                        {
+                            model: Item,
+                            as: 'item'
+                        }
+                    ]
                 },
                 {
                     model: Company,
                     as: 'company'
-                }
+                },
             ],
             offset: this.details.offset,
             limit: this.details.limit,

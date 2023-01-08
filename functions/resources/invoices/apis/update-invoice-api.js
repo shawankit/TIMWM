@@ -8,6 +8,7 @@ const db = require('db/repository');
 const GetAInvoiceQuery = require('../queries/get-a-invoice-query');
 const CreateTransactionInBulkQuery = require('../../transactions/queries/create-transactions-in-bulk-query');
 const CreateInvoiceInBulkQuery = require('../queries/create-invoices-in-bulk-query');
+const DeleteTransactionsQuery = require('../../transactions/queries/delete-transactions-query');
 
 const post = async (req) => {
     const { 
@@ -16,18 +17,28 @@ const post = async (req) => {
         transactions
     } = req.body;
 
-    logInfo('Request to update invoices',{ customerId , total, transactions, invoiceDate });
+    logInfo('Request to update invoices',{ customerId , transactions, invoiceDate });
 
     const { id } = req.params;
 
     const response = await composeResult(
-        () => db.findOne(new GetAInvoiceQuery(id)),
         () => db.create(new CreateTransactionInBulkQuery(
-            transactions.map((transaction) => ({ ...transaction, customerId, invoiceId: id }))
+            transactions.map((transaction) => ({ ...transaction, customerId, id: transaction.id ? transaction.id : uuid.v4(), invoiceId: id }))
         )),
-        () => db.execute(new CreateInvoiceInBulkQuery([{
-            id, type, invoiceNumber, customerId, invoiceDate, companyId, labourCharges, claimAmount, taxableAmount, igst, cgst, sgst, cess, roundOff, tcs, totalValue
-        }]))
+        (invoiceData) => composeResult(
+            async () => {
+                const oldTransactions = invoiceData.transactions;
+                const deleteTransaction = oldTransactions.filter((existingTransaction) => !transactions.find((transaction) => existingTransaction.id === transaction.id))
+                const deleteIds = deleteTransaction.map((tr) => tr.id);
+                return deleteIds.length > 0 ? db.execute(new DeleteTransactionsQuery(deleteIds)) : Result.Ok({})
+            },
+            () => db.execute(new CreateInvoiceInBulkQuery(
+                [{
+                    id, type, invoiceNumber, customerId, invoiceDate, companyId, labourCharges, claimAmount, taxableAmount, igst, cgst, sgst, cess, roundOff, tcs, totalValue
+                }]
+            ))
+        )(),
+        () => db.findOne(new GetAInvoiceQuery(id)),
     )();
 
     return respond(response,'Successfully Updated invoices', 'Failed to update invoices');

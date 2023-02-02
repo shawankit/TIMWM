@@ -66,7 +66,6 @@ const InvoiceForm = ({ data , callback, setEditData, page}) => {
         // console.log('data', data);
         if(data){
             const transactions =  data.transactions.map((element, index) => {
-                const total  = element.rate * element.quantity;
                 return ({
                     id: element.id,
                     key: index,
@@ -75,7 +74,7 @@ const InvoiceForm = ({ data , callback, setEditData, page}) => {
                     categoryName: element.item.name,
                     rate: element.rate,
                     quantity: element.quantity,
-                    total
+                    total: element.total
                 })
             });
     
@@ -109,7 +108,7 @@ const InvoiceForm = ({ data , callback, setEditData, page}) => {
         }
         formData.taxableAmount = formData.transactions.reduce((total,t) => total + (t.total), 0);
         const additinalField = ["igst","cgst","sgst","cess","roundOff","tcs"]
-        formData.totalValue = formData.taxableAmount +  additinalField.reduce((total, fN) => total + parseFloat(formData[fN]) , 0 );;
+        formData.totalValue = formData.taxableAmount +  additinalField.reduce((total, fN) => total + (formData[fN] ? formData[fN] : 0) , 0 );;
         formData.type = page;
         // console.log('formData', formData);
         if(data){
@@ -142,6 +141,7 @@ const InvoiceForm = ({ data , callback, setEditData, page}) => {
 
     const reset = () => {
         setFormData(initialData);
+        setEditData(null);
     }
 
     const setTransactions = (transactions) => {

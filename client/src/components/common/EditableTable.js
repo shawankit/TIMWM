@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Button, Form, Input, Popconfirm, Select, Table } from 'antd';
+import { uuid } from '../../util/util';
 
 const EditableRow = ({ index, ...props }) => {
   return (
@@ -25,22 +26,17 @@ const EditableCell = ({
     if(!record.taxRow){
       let newValues = {};
       if( dataIndex === 'categoryName'){
-          newValues = { categoryName: items[value].name, itemId: value, rate: items[value].rate, itemCode: items[value].code };
-          if(record.quantity != undefined){
-            newValues.total = Math.round(parseFloat(newValues.rate) * parseFloat(record.quantity) * 10) / 10;
-          }
+          newValues = { categoryName: items[value].name, itemId: value, rate: null, itemCode: items[value].code };
       }
-
-      if(dataIndex == 'quantity' && record.rate != undefined){
-        newValues = { quantity: value };
-        newValues.total =  Math.round(parseFloat(record.rate) * parseFloat(value) * 10) / 10;
+      else{
+        newValues = { [dataIndex]: value == '' ? 0 : parseFloat(value) };
       }
-
+     
     
       handleSave({ ...record, ...newValues });
     }
     else{
-      handleTaxInput({ ...record, total: value });
+      handleTaxInput({ ...record, total:  value == '' ? 0 : parseFloat(value) });
     }
     
   }
@@ -48,11 +44,8 @@ const EditableCell = ({
     let childNode = children;
     
     let edit = false;
-    if(dataIndex == 'total' && record?.taxRow && editable){
+    if(dataIndex == 'total' && editable){
       edit = true;
-    }
-    else if(dataIndex == 'total' && !record?.taxRow){
-      edit = false;
     }
     else{
       edit = editable  && !record.taxRow;
@@ -100,7 +93,6 @@ const EditableCell = ({
 
 const EditableTable = ({ setTransactions, transactions, items, notEditable, invoiceDetails, setParentTaxableRows }) => {
   const [dataSource, setDataSource] = useState([]);
-  const [count, setCount] = useState(0);
 
   useEffect(() => {
     setDataSource(transactions || []);
@@ -119,7 +111,7 @@ const EditableTable = ({ setTransactions, transactions, items, notEditable, invo
             { number ? number.toLocaleString('en-IN') : number } 
         </div>
     )
-}
+  }
 
   const defaultColumns = [
     {
@@ -133,12 +125,13 @@ const EditableTable = ({ setTransactions, transactions, items, notEditable, invo
       dataIndex: 'itemCode',
       width: '15%'
     },
-    {
-      title: 'Rate',
-      dataIndex: 'rate',
-      width: '10%',
-      render: numberRender
-    },
+    // {
+    //   title: 'Taxable Value',
+    //   dataIndex: 'rate',
+    //   width: '10%',
+    //   editable: !notEditable,
+    //   render: numberRender
+    // },
     {
       title: 'Quantity',
       dataIndex: 'quantity',
@@ -146,7 +139,7 @@ const EditableTable = ({ setTransactions, transactions, items, notEditable, invo
       editable: !notEditable
     },
     {
-      title: 'Total',
+      title: 'Taxable Value',
       dataIndex: 'total',
       width: '20%',
       render: numberRender,
@@ -170,14 +163,13 @@ const EditableTable = ({ setTransactions, transactions, items, notEditable, invo
 
   const handleAdd = () => {
     const newData = {
-      key: count,
+      key: uuid(),
       categoryName: `Select Item`,
       rate: '0',
       quantity: `0`,
       total: 0,
     };
     setDataSource([...dataSource, newData]);
-    setCount(count + 1);
   };
 
   const handleSave = (row) => {
@@ -257,10 +249,10 @@ const EditableTable = ({ setTransactions, transactions, items, notEditable, invo
       ...col,
       onCell: (record, index) => {
         let __ = {};
-        const exceptionRows = ['Total Amount', 'Taxable Value', 'IGST', 'CGST'];
+        const exceptionRows = ['Total Amount', 'Taxable Value', 'IGST', 'CGST', 'SGST', 'Cess', 'Round Off'];
         if(exceptionRows.includes(record.categoryName) && col.dataIndex == 'categoryName' ){
           __ = {
-            colSpan: 4
+            colSpan: 3
           }
         }
 

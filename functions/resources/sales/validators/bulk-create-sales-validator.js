@@ -38,9 +38,9 @@ const validationMessages = {
     itemName: [
         [notEmpty, 'Item Name is Mandatory!']
     ],
-    goodsValue: [
-        [notEmpty, 'Goods Value is Mandatory!'],
-        [isStringNumeric, 'Goods Value should be numberic']
+    itemValue: [
+        [notEmpty, 'Item Value is Mandatory!'],
+        [isStringNumeric, 'Item Value should be numberic']
     ],
     labourCharges: [
         [optional(isStringNumeric), 'Labour Charges should be number!']

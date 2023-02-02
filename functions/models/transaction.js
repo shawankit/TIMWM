@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     invoiceId: DataTypes.UUID,
     rate: DataTypes.DOUBLE,
     quantity: DataTypes.DOUBLE,
+    total: DataTypes.DOUBLE
   }, {
     sequelize,
     modelName: 'Transaction',

@@ -42,17 +42,21 @@ const processData = async (sales, type) => {
                 items: [],
                 type,
                 invoiceDate: moment(data.invoiceDate, 'DD-MM-YYYY').format('YYYY-MM-DD'),
-                labourCharges: get0IfEmpty(data.labourCharges),
-                claimAmount: get0IfEmpty(data.claimAmount),
-                taxableAmount: get0IfEmpty(data.taxableAmount),
-                igst: get0IfEmpty(data.igst),
-                cgst: get0IfEmpty(data.cgst),
-                sgst: get0IfEmpty(data.sgst),
-                cess: get0IfEmpty(data.cess),
-                roundOff: get0IfEmpty(data.roundOff),
-                tcs: get0IfEmpty(data.tcs),
-                totalValue: get0IfEmpty(data.totalValue)
             }
+        }
+
+        customer.invoiceMap[invoiceNumber] = {
+            ... customer.invoiceMap[invoiceNumber],
+            labourCharges: get0IfEmpty(data.labourCharges),
+            claimAmount: get0IfEmpty(data.claimAmount),
+            taxableAmount: get0IfEmpty(data.taxableAmount),
+            igst: get0IfEmpty(data.igst),
+            cgst: get0IfEmpty(data.cgst),
+            sgst: get0IfEmpty(data.sgst),
+            cess: get0IfEmpty(data.cess),
+            roundOff: get0IfEmpty(data.roundOff),
+            tcs: get0IfEmpty(data.tcs),
+            totalValue: get0IfEmpty(data.totalValue)
         }
 
         const invoice =  customer.invoiceMap[invoiceNumber];
@@ -61,7 +65,7 @@ const processData = async (sales, type) => {
             name: data.itemName,
             quantity: get0IfEmpty(data.quantity),
             uom: data.uom,
-            rate: get0IfEmpty(data.rate)
+            total: get0IfEmpty(data.itemValue)
         });
     });
     
@@ -143,7 +147,7 @@ module.exports.perform = async (sales, type) => {
                                             code: item.code,
                                             name: item.name,
                                             uom: item.uom,
-                                            rate: item.rate,
+                                            rate: item.quantity == 0 ? 0 : item.total / item.quantity,
                                             companyId
                                         })
                                     }
@@ -154,7 +158,7 @@ module.exports.perform = async (sales, type) => {
                                     transactions.push({
                                         id: transactionId,
                                         quantity: item.quantity,
-                                        rate: item.rate,
+                                        total: item.total,
                                         itemId,
                                         invoiceId,
                                         customerId

@@ -29,6 +29,7 @@ const Invoices = ({ page, reload, setEditData, setReload }) => {
         const getApi = getApiFn(page); 
         const response = await getApi(page, search, (currentPage - 1) * pageSize, pageSize , JSON.stringify(filter));
         
+        console.log('response', response);
         setInvoices(response?.data?.entity.rows.map((data) => mappingData(page, data)));
         setTotal(response?.data?.entity.count);
     }
@@ -88,7 +89,7 @@ const Invoices = ({ page, reload, setEditData, setReload }) => {
                 }
 
                 if(column.name === 'companyId'){
-                    return `${data.company.division} - ${data.company.name}` 
+                    return `${data?.company?.division} - ${data?.company?.name}` 
                 }
                 return value
             }

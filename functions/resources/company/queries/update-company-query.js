@@ -2,11 +2,12 @@ const { Company } = require('models');
 
 module.exports = class UpdateCompanyQuery {
     constructor({
-        id, name
+        id, name, division
     }) {
         this.details = {
             id,
-            name
+            name,
+            division
         };
     }
 
@@ -18,6 +19,7 @@ module.exports = class UpdateCompanyQuery {
         });
 
         company.name = this.details.name;
+        company.division = this.details.division;
 
         return company.save();
     }

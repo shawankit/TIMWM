@@ -7,11 +7,9 @@ const GetItemsQuery = require('../queries/get-items-queries');
 
 const get = async (req) => {
 
-    const { customerId } = req.query; 
-
     logInfo('Request to fetch all items',{});
 
-    const response = await db.find(new GetItemsQuery(customerId));
+    const response = await db.find(new GetItemsQuery());
 
     return respond(response,'Successfully Fetched All items', 'Failed to fetch items')
 }

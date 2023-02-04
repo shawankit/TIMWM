@@ -55,7 +55,7 @@ const Page = ({ page }) => {
         {showAdd && 
             <div className="site-layout-background p-5" id='form-div'>
                 <Title level={3} style={{color: 'rgba(107, 114, 128, var(--tw-text-opacity))'}} className='border-b-2' >{editData ? 'Edit' : 'Add'} {getPageName(page)}</Title>
-                { (page === 'customer' || page == 'vendor') && <CustomerForm 
+                { (page === 'customer' || page == 'vendor'  || page == 'company' || page == 'item') && <CustomerForm 
                         data={editData}
                         callback={() => setReload(!reload)}
                         setEditData={setEditData}

@@ -2,11 +2,9 @@ const { Item } = require("../../../models");
 
 
 module.exports = class CreateItemQuery {
-    constructor(id,name,rate,taxable, gstRate){
+    constructor(id,name,code,uom, rate, companyId){
         this.details = {
-            id,
-            name,
-            rate
+            id,name,code,uom, rate, companyId
         }
     }
 

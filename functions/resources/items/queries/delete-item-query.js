@@ -1,16 +1,16 @@
-const { MilkCategory } = require('models');
+const { Item } = require('models');
 
-module.exports = class DeleteCategoryQuery {
-    constructor(categoryId) {
+module.exports = class DeleteItemQuery {
+    constructor(itemId) {
         this.details = {
-            categoryId
+            itemId
         };
     }
 
     get() {
-        return MilkCategory.destroy({
+        return Item.destroy({
             where: {
-                id: this.details.categoryId
+                id: this.details.itemId
             }
         });
     }

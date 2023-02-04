@@ -1,70 +1,28 @@
 const Route = require('route');
 const db = require('db/repository');
-const { respond, uuid } = require('lib');
+const { respond } = require('lib');
 const { logInfo } = require('lib/functional/logger');
-const { adminAuth } = require('authorization.js');
-const privileges = require('resources/roles/config/privileges');
 const CreateCompanyQuery = require('../queries/create-company-query');
+const uuid = require('uuid');
 
 const post = async (req) => {
     const {
-        companyName,
-        brandName,
-        address,
-        country,
-        state,
-        logo,
-        defaultCurrency,
-        financialYearStartDate,
-        financialYearEndDate,
-        pan,
-        tan,
-        sendGridApiKey,
-        sendGridEmail
+        name, division
     } = req.body;
 
     const id = uuid.v4();
 
     logInfo('Request to create company', {
-        companyName,
-        brandName,
-        address,
-        country,
-        state,
-        logo,
-        defaultCurrency,
-        financialYearStartDate,
-        financialYearEndDate,
-        pan,
-        tan,
-        sendGridApiKey,
-        sendGridEmail
+        name, division
     });
 
     const response = await db.execute(
         new CreateCompanyQuery({
-            id,
-            companyName,
-            brandName,
-            address,
-            country,
-            state,
-            logo,
-            defaultCurrency,
-            financialYearStartDate,
-            financialYearEndDate,
-            pan,
-            tan,
-            sendGridApiKey,
-            sendGridEmail
+            id, name, division
         })
     );
 
-    return respond(
-        response,
-        'Successfully created company!',
-        'Failed to create company!'
-    );
+    return respond(response, 'Successfully created company!', 'Failed to create company!');
 };
 
-Route.withSecurity().authorize(adminAuth(privileges.organizationManagement)).post('/company', post).bind();
+Route.withSecurity().noAuth().post('/companies', post).bind();

@@ -3,14 +3,15 @@ import { Modal, Button, Row, Col, Table, Typography } from 'antd';
 import InputField from '../common/InputField';
 import { createCustomer, getCompanies, updateCustomer } from '../../api'; 
 import swal from 'sweetalert';
-import CustomerData from '../../data/CustomerData';
 import SelectField from '../common/SelectField';
 import { PlusOutlined, RestOutlined } from '@ant-design/icons';
+import { createApiFn, getFieldData } from '../../util/util';
 
 
 const CustomerForm = ({ data , callback, setEditData, page }) => {
 
-    const initialData = CustomerData.reduce((previous, field) => ({...previous,[field.name]: ''}),{});
+    const FieldData = getFieldData(page);
+    const initialData = FieldData.reduce((previous, field) => ({...previous,[field.name]: ''}),{});
     const [formData, setFormData] = useState(initialData);
 
     const onChange = (e) => {
@@ -37,12 +38,6 @@ const CustomerForm = ({ data , callback, setEditData, page }) => {
         setFormData(data);
     },[data])
 
-    const setRatesToData = (data) => {
-        setFormData({
-            ...formData,
-            rates: Object.values(data)
-        })
-    }
 
     const onSubmit = async (close) => {
         const finalData = {
@@ -52,17 +47,17 @@ const CustomerForm = ({ data , callback, setEditData, page }) => {
 
         console.log('finalData', finalData);
         if(data) {
-            let response = await updateCustomer(data.id, finalData);
+            let response = await updateApiFn(page)(data.id, finalData);
             console.log(response);
             if(response?.data?.status == true){
-                swal("Succesfully updated customer details", "success");
+                swal(`Succesfully updated ${page} details`, "success");
             }
             else{
                 swal("OOPS Something Went wrong", "error");
             }
         }
         else{
-            let response = await createCustomer(finalData);
+            let response = await createApiFn(page)(finalData);
             console.log(response);
             if(response?.data?.status == true){
                 swal("Succesfully added customer details", "success");
@@ -80,14 +75,12 @@ const CustomerForm = ({ data , callback, setEditData, page }) => {
         setEditData(null);
     }
 
-    const customerType =  [{ value: 'normal', name: 'Normal' }, { value: 'special', name: 'Special'} ];
-
     return (
         <>
             <div>
                 <Row>
                     { 
-                        CustomerData.map((field) => field.type == 'input' ?
+                        FieldData.map((field) => field.type == 'input' ?
                             <InputField
                                 label={page === 'vendor'? field.label.replace('Customer', 'Vendor') : field.label}
                                 type={field.inputType} 

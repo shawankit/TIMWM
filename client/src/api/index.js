@@ -68,6 +68,9 @@ export const getAllReceipts = (type, search, offset, limit, filters) => API.get(
 export const deleteReceipt = (id) => API.delete(`/receipts/${id}`, { headers: getHeaders() });
 
 export const getCompanies = (search, offset, limit) => API.get(UrlParamsReplace(`/companies`, {}, { search, offset, limit }), { headers: getHeaders() });
+export const createCompany = (company) => API.post("/companies", company, { headers: getHeaders() });
+export const updateCompany = (id, company) => API.put(`/companies/${id}`, company, { headers: getHeaders() });
+export const deleteCompany= (id) => API.delete(`/companies/${id}`, { headers: getHeaders() });
 
 export const getCustomers = (type, search, offset, limit) => API.get(UrlParamsReplace(`/customers`, {}, { type, search, offset, limit }), { headers: getHeaders() });
 export const createCustomer = (customer) => API.post("/customers", customer, { headers: getHeaders() });
@@ -75,3 +78,6 @@ export const updateCustomer = (id, customer) => API.put(`/customers/${id}`, cust
 export const deleteCustomer= (id) => API.delete(`/customers/${id}`, { headers: getHeaders() });
 
 export const getItems = (search, offset, limit) => API.get(UrlParamsReplace(`/items`, {}, { search, offset, limit }), { headers: getHeaders() });
+export const createItem = (item) => API.post("/items", item, { headers: getHeaders() });
+export const updateItem = (id, item) => API.put(`/items/${id}`, item, { headers: getHeaders() });
+export const deleteItem= (id) => API.delete(`/items/${id}`, { headers: getHeaders() });

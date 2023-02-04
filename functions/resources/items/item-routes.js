@@ -1,4 +1,4 @@
-// require('./apis/create-milk-category-api');
+require('./apis/create-items-api');
 require('./apis/get-items-api');
-// require('./apis/update-milk-category-api');
-// require('./apis/delete-milk-catgeory-api');
+require('./apis/update-item-api');
+require('./apis/delete-item-api');

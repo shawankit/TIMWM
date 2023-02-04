@@ -2,11 +2,12 @@ const { Company } = require('models');
 
 module.exports = class CreateCompanyQuery {
     constructor({
-        id, name
+        id, name, division
     }) {
         this.details = {
             id,
-            name
+            name,
+            division
         };
     }
 

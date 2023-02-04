@@ -170,11 +170,6 @@ module.exports.perform = async (sales, type) => {
                     });
                 });
 
-                console.log('companies', companies);
-                console.log('customers', customers);
-                console.log('invoices', invoices);
-                console.log('items', items);
-                console.log('transactions', transactions);
 
                 return composeResult(
                     () => db.create(new CreateTransactionInBulkQuery(transactions)),

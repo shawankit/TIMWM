@@ -1,4 +1,4 @@
-const { Company, User, Role, UserRole } = require('models');
+const { Company } = require('models');
 const { Op } = require('sequelize');
 
 module.exports = class GetCompaniesQuery {

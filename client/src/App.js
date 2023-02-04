@@ -86,6 +86,12 @@ const App = () => {
               <Route exact path="/vendors">
                 <Page page={'vendor'}/>
               </Route>
+              <Route exact path="/divisions">
+                <Page page={'company'}/>
+              </Route>
+              <Route exact path="/items">
+                <Page page={'item'}/>
+              </Route>
             </Switch>
           </div>
         </Content>

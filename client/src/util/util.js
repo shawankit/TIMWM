@@ -1,9 +1,11 @@
 import moment from 'moment';
 import swal from 'sweetalert';
-import { deleteCustomer, deleteInvoice, deleteReceipt, getAllInvoices, getAllReceipts, getCustomers } from '../api';
+import { createCompany, createCustomer, createItem, deleteCompany, deleteCustomer, deleteInvoice, deleteItem, deleteReceipt, getAllInvoices, getAllReceipts, getCompanies, getCustomers, getItems, updateCompany, updateCustomer, updateItem } from '../api';
 import ReceiptData from '../data/ReceiptData';
 import InvoiceData from '../data/InvoiceData';
 import CustomerData from '../data/CustomerData';
+import ItemData from '../data/ItemData';
+import CompanyData from '../data/CompanyData';
 
 export function sweetalertValidate(message) {
     swal({
@@ -149,6 +151,8 @@ export const getPageName = (page) => {
     if(page === 'payments') return 'Payments';
     if(page === 'customer') return 'Customers';
     if(page === 'vendor') return 'Vendors';
+    if(page === 'company') return 'Divisions';
+    if(page === 'item') return 'Items';
 }
 
 export const mappingData = (page, data) => {
@@ -180,6 +184,13 @@ export const getApiFn = (page) => {
     if(page == 'customer' || page == 'vendor'){
         return getCustomers;
     }
+    if(page == 'company'){
+        return (page, search, offset, limit, filters) => getCompanies(search, offset, limit);
+    }
+
+    if(page == 'item'){
+        return (page, search, offset, limit, filters) => getItems(search, offset, limit);
+    }
 }
 
 export const getFieldData = (page) => {
@@ -192,6 +203,15 @@ export const getFieldData = (page) => {
     if(page == 'customer' || page == 'vendor'){
         return CustomerData;
     }
+
+    if(page == 'company'){
+        return CompanyData;
+    }
+
+    if(page == 'item'){
+        return ItemData;
+    }
+
 } 
 
 export const isUploadButton = (page) => {
@@ -201,7 +221,7 @@ export const isUploadButton = (page) => {
     if(page == 'purchase' || page == 'sales'){
         return true;
     }
-    if(page == 'customer' || page == 'vendor'){
+    if(page == 'customer' || page == 'vendor' || page == 'company' || page == 'item'){
         return false;
     }
 }
@@ -215,5 +235,41 @@ export const deleteApiFn = (page) => {
     }
     if(page == 'customer' || page == 'vendor'){
         return deleteCustomer;
+    }
+
+    if(page == 'company'){
+        return deleteCompany;
+    }
+
+    if(page == 'item'){
+        return deleteItem;
+    }
+}
+
+export const createApiFn = (page) => {
+    if(page == 'customer' || page == 'vendor'){
+        return createCustomer;
+    }
+
+    if(page == 'company'){
+        return createCompany;
+    }
+
+    if(page == 'item'){
+        return createItem;
+    }
+}
+
+export const updateApiFn = (page) => {
+    if(page == 'customer' || page == 'vendor'){
+        return updateCustomer;
+    }
+
+    if(page == 'company'){
+        return updateCompany;
+    }
+
+    if(page == 'item'){
+        return updateItem;
     }
 }

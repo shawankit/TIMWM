@@ -8,17 +8,17 @@ const db = require('db/repository');
 const CreateItemQuery = require('../queries/create-item-query');
 
 const post = async (req) => {
-    const { name , rate, taxable, gstRate}
+    const { name , code, uom,rate, companyId }
      = req.body;
 
-    logInfo('Request to create milk-category',name);
+    logInfo('Request to create items',name);
 
     const id = uuid.v4();
 
-    const response = await db.execute(new CreateItemQuery(id,name,rate,taxable, gstRate));
+    const response = await db.execute(new CreateItemQuery(id,name,code,uom,rate, companyId));
 
-    return respond(response,'Successfully Created milk-category', 'Failed to create milk-category')
+    return respond(response,'Successfully Created items', 'Failed to create items')
 }
 
-Route.withOutSecurity().noAuth().post('/milk-category',post).bind();
+Route.withSecurity().noAuth().post('/items',post).bind();
 

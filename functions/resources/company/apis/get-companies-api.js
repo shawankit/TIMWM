@@ -2,7 +2,7 @@ const Route = require('route');
 const db = require('db/repository');
 const { respond } = require('lib');
 const { logInfo } = require('lib/functional/logger');
-const GetCompaniesQuery = require('resources/company/queries/get-companies-query');
+const GetCompaniesQuery = require('../queries/get-companies-query');
 
 const get = async (req) => {
     const { search, offset, limit, filters } = req.query;

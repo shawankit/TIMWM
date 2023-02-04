@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Menu, Typography, Avatar } from 'antd';
 import { Link } from 'react-router-dom';
-import { HomeOutlined, MoneyCollectOutlined, FundOutlined, MenuOutlined, StrikethroughOutlined, FileExcelOutlined, BarChartOutlined, PieChartOutlined, DatabaseOutlined, CustomerServiceOutlined, PayCircleOutlined, UsergroupAddOutlined } from '@ant-design/icons';
+import { HomeOutlined, MoneyCollectOutlined, FundOutlined, MenuOutlined, StrikethroughOutlined, FileExcelOutlined, BarChartOutlined, PieChartOutlined, DatabaseOutlined, CustomerServiceOutlined, PayCircleOutlined, UsergroupAddOutlined, BankOutlined, OrderedListOutlined } from '@ant-design/icons';
 
 const Navbar = ({ collapsed }) => {
   const [activeMenu, setActiveMenu] = useState(true);
@@ -69,6 +69,12 @@ const Navbar = ({ collapsed }) => {
           </Menu.Item>
           <Menu.Item  key="vendors" icon={<PayCircleOutlined />}>
             <Link to="/vendors">Vendors</Link>
+          </Menu.Item>
+          <Menu.Item  key="divisions" icon={<BankOutlined />}>
+            <Link to="/divisions">Divisions</Link>
+          </Menu.Item>
+          <Menu.Item  key="items" icon={<OrderedListOutlined />}>
+            <Link to="/items">Items</Link>
           </Menu.Item>
         </Menu.SubMenu>
       </Menu>

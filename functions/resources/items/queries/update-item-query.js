@@ -2,11 +2,9 @@ const { Item } = require("../../../models");
 
 
 module.exports = class UpdateItemQuery {
-    constructor(id,name,rate){
+    constructor(id,name,code,uom,rate, companyId){
         this.details = {
-            id,
-            name,
-            rate
+            id,name,code,uom,rate, companyId
         }
     }
 
@@ -18,7 +16,10 @@ module.exports = class UpdateItemQuery {
         });
 
         item.name = this.details.name;
+        item.code = this.details.code;
         item.rate = this.details.rate;
+        item.uom = this.details.uom;
+        item.companyId = this.details.companyId;
 
         return item.save();
     }

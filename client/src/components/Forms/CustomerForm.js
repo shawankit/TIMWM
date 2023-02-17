@@ -22,7 +22,10 @@ const CustomerForm = ({ data , callback, setEditData, page }) => {
         setFormData({...formData,[name]: value});
     }
 
-    const [divisions, setDivisions] = useState([]);
+    const selectFieldList = FieldData.filter((field) => field.type == 'select');
+    const initialMasterData = selectFieldList.reduce((previous, field) => ({...previous,[field.list]: []}),{});
+    const [masterData, setMasterData] = useState(initialMasterData);
+
     const fetchCompanies = async () => {
         const res = await getCompanies();
         setDivisions(
@@ -33,8 +36,15 @@ const CustomerForm = ({ data , callback, setEditData, page }) => {
         )
       }
 
-    useEffect(() => {
-        fetchCompanies();
+    useEffect(async () => {
+        
+        const newMasterData = {};
+        for (let index = 0; index < selectFieldList.length; index++) {
+            const field = selectFieldList[index];
+            newMasterData[field.list] = await field.getData();;
+        }
+
+        setMasterData({ ...masterData, ...newMasterData });
         setFormData(data);
     },[data])
 
@@ -91,7 +101,7 @@ const CustomerForm = ({ data , callback, setEditData, page }) => {
                             /> : 
                             <SelectField
                                 label={field.label}
-                                option={eval(field.list).map((item) => ({ value: item.value, text: item.label}))}
+                                option={eval(masterData[field.list]).map((item) => ({ value: item.value, text: item.label}))}
                                 showSearch
                                 optionFilterProp="children"
                                 value={formData ? formData[field.name] : ''}

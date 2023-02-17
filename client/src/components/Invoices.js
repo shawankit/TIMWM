@@ -7,7 +7,7 @@ import FilterModal from './Modal/FilterModal';
 import SelectedFilters from './Modal/SelectedFilters';
 import { deleteApiFn, getApiFn, getFieldData, getPageName, getTitle, mappingData, sweetalertMessage, sweetalertOkCancel, sweetalertValidate } from '../util/util';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { deleteCustomer } from '../api';
+import moment from 'moment';
 
 const { Title } = Typography;
 
@@ -87,9 +87,21 @@ const Invoices = ({ page, reload, setEditData, setReload }) => {
                     )
                         
                 }
+                if(column.inputType === 'date'){
+                    return (
+                        <div>
+                            { value ? moment(value).format('DD-MM-YYYY') : null } 
+                        </div>
+                    )
+                        
+                }
 
                 if(column.name === 'companyId'){
                     return `${data?.company?.division} - ${data?.company?.name}` 
+                }
+
+                if(column.name === 'groupId'){
+                    return `${data?.group?.name}` 
                 }
                 return value
             }

@@ -76,6 +76,12 @@ const Navbar = ({ collapsed }) => {
           <Menu.Item  key="items" icon={<OrderedListOutlined />}>
             <Link to="/items">Items</Link>
           </Menu.Item>
+          <Menu.Item  key="groups" icon={<OrderedListOutlined />}>
+            <Link to="/groups">Groups</Link>
+          </Menu.Item>
+          <Menu.Item  key="ledgers" icon={<OrderedListOutlined />}>
+            <Link to="/ledgers">Ledgers</Link>
+          </Menu.Item>
         </Menu.SubMenu>
       </Menu>
       )}

@@ -92,6 +92,12 @@ const App = () => {
               <Route exact path="/items">
                 <Page page={'item'}/>
               </Route>
+              <Route exact path="/ledgers">
+                <Page page={'ledgers'}/>
+              </Route>
+              <Route exact path="/groups">
+                <Page page={'groups'}/>
+              </Route>
             </Switch>
           </div>
         </Content>

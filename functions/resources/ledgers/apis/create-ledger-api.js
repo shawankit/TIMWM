@@ -8,14 +8,14 @@ const db = require('db/repository');
 const CreateLedgerQuery = require('../queries/create-ledger-query');
 
 const post = async (req) => {
-    const { name, code, group, balanceDate, balance}
+    const { name, code, groupId, balanceDate, balance}
      = req.body;
 
     logInfo('Request to create ledgers',name);
 
     const id = uuid.v4();
 
-    const response = await db.execute(new CreateLedgerQuery(id, name, code, group, balanceDate, balance));
+    const response = await db.execute(new CreateLedgerQuery(id, name, code, groupId, balanceDate, balance));
 
     return respond(response,'Successfully Created ledgers', 'Failed to create ledgers')
 }

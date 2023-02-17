@@ -7,9 +7,11 @@ const GetItemsQuery = require('../queries/get-items-queries');
 
 const get = async (req) => {
 
+    const { search, offset, limit } = req.query;
+
     logInfo('Request to fetch all items',{});
 
-    const response = await db.find(new GetItemsQuery());
+    const response = await db.find(new GetItemsQuery(search, offset, limit));
 
     return respond(response,'Successfully Fetched All items', 'Failed to fetch items')
 }

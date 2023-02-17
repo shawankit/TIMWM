@@ -1,3 +1,5 @@
+import { getCompanies } from "../api";
+
 const CustomerData = [
     {
         label : "Customer Code",
@@ -22,7 +24,15 @@ const CustomerData = [
         name: 'companyId',
         type: 'select',
         inputType: 'text',
-        list: "divisions"
+        list: "divisions",
+        getData: async () => {
+            const res = await getCompanies();
+            console.log(res);
+            return res.data.entity?.rows.map((company) => ({
+                value: company.id,
+                label: `${company.division} - ${company.name}`
+            }))
+        }
     },
     {
         label : "GST Number",

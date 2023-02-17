@@ -2,9 +2,9 @@ const { Ledger } = require("../../../models");
 
 
 module.exports = class UpdateLedgerQuery {
-    constructor(id, name, code, group, balanceDate, balance){
+    constructor(id, name, code, groupId, balanceDate, balance){
         this.details = {
-            id, name, code, group, balanceDate, balance
+            id, name, code, groupId, balanceDate, balance
         }
     }
 
@@ -17,7 +17,7 @@ module.exports = class UpdateLedgerQuery {
 
         ledger.name = this.details.name;
         ledger.code = this.details.code;
-        ledger.group = this.details.group;
+        ledger.groupId = this.details.groupId;
         ledger.balanceDate = this.details.balanceDate;
         ledger.balance = this.details.balance;
 

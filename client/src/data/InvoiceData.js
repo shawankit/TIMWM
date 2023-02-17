@@ -9,7 +9,7 @@ const InvoiceData = [
         label : "Invoice Date",
         name: 'invoiceDate',
         type: 'input',
-        inputType: 'text'
+        inputType: 'date'
     },
     {
         label : "Customer Code",

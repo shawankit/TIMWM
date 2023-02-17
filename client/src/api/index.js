@@ -81,3 +81,8 @@ export const getItems = (search, offset, limit) => API.get(UrlParamsReplace(`/it
 export const createItem = (item) => API.post("/items", item, { headers: getHeaders() });
 export const updateItem = (id, item) => API.put(`/items/${id}`, item, { headers: getHeaders() });
 export const deleteItem= (id) => API.delete(`/items/${id}`, { headers: getHeaders() });
+
+export const _get_ = (entityName) => (search, offset, limit) => API.get(UrlParamsReplace(`/${entityName}`, {}, { search, offset, limit }), { headers: getHeaders() });
+export const _create_ = (entityName) => (item) => API.post(`/${entityName}`, item, { headers: getHeaders() });
+export const _update_ = (entityName) => (id, item) => API.put(`/${entityName}/${id}`, item, { headers: getHeaders() });
+export const _delete_ = (entityName) => (id) => API.delete(`/${entityName}/${id}`, { headers: getHeaders() });

@@ -5,3 +5,6 @@ require('./resources/receipts/receipts-routes');
 require('./resources/company/company-routes');
 require('./resources/customers/customers-routes');
 require('./resources/items/item-routes');
+require('./resources/ledgers/ledgers-routes');
+require('./resources/groups/groups-routes');
+require('./resources/journals/journal-routes');

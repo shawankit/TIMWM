@@ -1,6 +1,6 @@
-const { Item } = require("../../../models");
+const { Group } = require("../../../models");
 
-module.exports = class GetItemsQuery {
+module.exports = class GetGroupQuery {
     constructor(search, offset = 0, limit){
         this.details = {
             search, offset, limit
@@ -8,7 +8,7 @@ module.exports = class GetItemsQuery {
     }
 
     get(){
-        return Item.findAndCountAll({
+        return Group.findAndCountAll({
             offset: this.details.offset,
             limit: this.details.limit,
             order: ['createdAt']

@@ -1,11 +1,13 @@
 import moment from 'moment';
 import swal from 'sweetalert';
-import { createCompany, createCustomer, createItem, deleteCompany, deleteCustomer, deleteInvoice, deleteItem, deleteReceipt, getAllInvoices, getAllReceipts, getCompanies, getCustomers, getItems, updateCompany, updateCustomer, updateItem } from '../api';
+import { _create_, _delete_, _get_, _update_, createCompany, createCustomer, createItem, deleteCompany, deleteCustomer, deleteInvoice, deleteItem, deleteReceipt, getAllInvoices, getAllReceipts, getCompanies, getCustomers, getItems, updateCompany, updateCustomer, updateItem } from '../api';
 import ReceiptData from '../data/ReceiptData';
 import InvoiceData from '../data/InvoiceData';
 import CustomerData from '../data/CustomerData';
 import ItemData from '../data/ItemData';
 import CompanyData from '../data/CompanyData';
+import GroupData from '../data/GroupData';
+import LedgerData from '../data/LedgerData';
 
 export function sweetalertValidate(message) {
     swal({
@@ -153,6 +155,8 @@ export const getPageName = (page) => {
     if(page === 'vendor') return 'Vendors';
     if(page === 'company') return 'Divisions';
     if(page === 'item') return 'Items';
+    if(page === 'groups') return 'Groups';
+    if(page === 'ledgers') return 'Ledgers';
 }
 
 export const mappingData = (page, data) => {
@@ -163,7 +167,6 @@ export const mappingData = (page, data) => {
             invoiceNumber:  page == 'receipts' || page == 'payments' ? data.invoice?.invoiceNumber : data.invoiceNumber,
             customerName: data.customer?.name,
             customerCode: data.customer?.code,
-            invoiceDate: data.invoiceDate? moment(data.invoiceDate).format('DD-MM-YYYY') : null,
             companyName: data.company.name,
             division: data.company.division,
             receiptDate: data.receiptDate? moment(data.receiptDate).format('DD-MM-YYYY') : null,
@@ -191,6 +194,7 @@ export const getApiFn = (page) => {
     if(page == 'item'){
         return (page, search, offset, limit, filters) => getItems(search, offset, limit);
     }
+    return (page, search, offset, limit, filters) => _get_(page)(search, offset, limit);
 }
 
 export const getFieldData = (page) => {
@@ -212,6 +216,14 @@ export const getFieldData = (page) => {
         return ItemData;
     }
 
+    if(page == 'groups'){
+        return GroupData;
+    }
+
+    if(page == 'ledgers'){
+        return LedgerData;
+    }
+
 } 
 
 export const isUploadButton = (page) => {
@@ -221,9 +233,7 @@ export const isUploadButton = (page) => {
     if(page == 'purchase' || page == 'sales'){
         return true;
     }
-    if(page == 'customer' || page == 'vendor' || page == 'company' || page == 'item'){
-        return false;
-    }
+    return false;
 }
 
 export const deleteApiFn = (page) => {
@@ -244,6 +254,7 @@ export const deleteApiFn = (page) => {
     if(page == 'item'){
         return deleteItem;
     }
+    return _delete_(page);
 }
 
 export const createApiFn = (page) => {
@@ -258,6 +269,7 @@ export const createApiFn = (page) => {
     if(page == 'item'){
         return createItem;
     }
+    return _create_(page);
 }
 
 export const updateApiFn = (page) => {
@@ -272,4 +284,5 @@ export const updateApiFn = (page) => {
     if(page == 'item'){
         return updateItem;
     }
+    return _update_(page);
 }

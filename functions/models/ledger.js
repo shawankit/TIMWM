@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'ledgerId',
         as: 'journals'
       });
+      Ledger.belongsTo(models.Group, {
+        foreignKey: 'groupId',
+        as: 'group'
+      });
     }
   }
   Ledger.init({
@@ -25,10 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     name: DataTypes.TEXT,
     code: DataTypes.STRING,
-    group: {
-      type: DataTypes.ENUM,
-      values: ['sundary_debtor', 'sundary_creditor']
-    },
+    groupId: DataTypes.UUID,
     balanceDate: DataTypes.DATE,
     balance: DataTypes.DOUBLE
   }, {

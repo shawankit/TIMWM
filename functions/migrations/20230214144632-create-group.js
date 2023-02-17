@@ -1,34 +1,15 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('ledgers', {
+    await queryInterface.createTable('groups', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
       },
       name: {
-        type: Sequelize.TEXT
-      },
-      code: {
+        allowNull: false,
         type: Sequelize.STRING
-      },
-      groupId: {
-        type: Sequelize.UUID,
-        field: 'group_id',
-        references: {
-          model: {
-              tableName: 'groups'
-            },
-            key: 'id'
-        }
-      },
-      balanceDate: {
-        type: Sequelize.DATE,
-        field: 'balance_date'
-      },
-      balance: {
-        type: Sequelize.DOUBLE
       },
       createdAt: {
         allowNull: false,
@@ -43,6 +24,6 @@ module.exports = {
     });
   },
   async down(queryInterface) {
-    await queryInterface.dropTable('ledgers');
+    await queryInterface.dropTable('groups');
   }
 };

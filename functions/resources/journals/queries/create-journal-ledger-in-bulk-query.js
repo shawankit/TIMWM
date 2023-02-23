@@ -7,10 +7,8 @@ module.exports = class CreateJournalLedgerInBulkQuery {
 
     async get() {
         const fieldsToUpdate = Object.keys(JournalLedger.getAttributes());
-        const fieldsToExclude = ['id', 'createdAt']
+        const fieldsToExclude = ['id', 'createdAt', 'journalId']
 
-        return JournalLedger.bulkCreate(this.details, {
-            updateOnDuplicate: fieldsToUpdate.filter((field) => !fieldsToExclude.includes(field))
-        });
+        return JournalLedger.bulkCreate(this.details);
     }
 };

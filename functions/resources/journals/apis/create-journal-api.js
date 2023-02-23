@@ -7,10 +7,11 @@ const Result = require('folktale/result');
 const db = require('db/repository');
 const CreateJournalQuery = require('../queries/create-journal-query');
 const CreateJournalLedgerInBulkQuery = require('../queries/create-journal-ledger-in-bulk-query');
+const GetAJounalQuery = require('../queries/get-a-journal-query');
 
 const post = async (req) => {
     const { 
-        jounalLedgers 
+        jounalLedgers, dated, description 
     } = req.body;
 
     logInfo('Request to create journals',{ });
@@ -18,11 +19,11 @@ const post = async (req) => {
     const journalId = uuid.v4();
 
     const response = await composeResult(
-        () => db.findOne(new GetAJounalQuery(id)),
+        () => db.findOne(new GetAJounalQuery(journalId)),
         () => db.create(new CreateJournalLedgerInBulkQuery(
             jounalLedgers.map((jounalLedger) => ({ ...jounalLedger, id: uuid.v4(), journalId }))
         )),
-        () => db.execute(new CreateJournalQuery(journalId))
+        () => db.execute(new CreateJournalQuery(journalId, dated, description ))
     )();
 
     return respond(response,'Successfully Created journals', 'Failed to create journals');

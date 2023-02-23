@@ -63,6 +63,9 @@ const Navbar = ({ collapsed }) => {
         <Menu.Item icon={<StrikethroughOutlined />} key='payments'>
           <Link to="/payments">Payments</Link>
         </Menu.Item>
+        <Menu.Item icon={<StrikethroughOutlined />} key='journals'>
+          <Link to="/journals">Journals</Link>
+        </Menu.Item>
         <Menu.SubMenu key="master-data" title={'Master Data'} icon={<DatabaseOutlined />}>
           <Menu.Item  key="customers" icon={<UsergroupAddOutlined />}>
             <Link to="/customers">Customers</Link>

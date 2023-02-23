@@ -8,6 +8,7 @@ import ItemData from '../data/ItemData';
 import CompanyData from '../data/CompanyData';
 import GroupData from '../data/GroupData';
 import LedgerData from '../data/LedgerData';
+import JournalData from '../data/JournalData';
 
 export function sweetalertValidate(message) {
     swal({
@@ -157,6 +158,7 @@ export const getPageName = (page) => {
     if(page === 'item') return 'Items';
     if(page === 'groups') return 'Groups';
     if(page === 'ledgers') return 'Ledgers';
+    if(page === 'journals') return 'Journals';
 }
 
 export const mappingData = (page, data) => {
@@ -170,6 +172,12 @@ export const mappingData = (page, data) => {
             companyName: data.company.name,
             division: data.company.division,
             receiptDate: data.receiptDate? moment(data.receiptDate).format('DD-MM-YYYY') : null,
+        }
+    }
+    else if(page === 'journals'){
+        return {
+            ...data,
+            ledgerNames: data.ledgers.map((l) => l.name).toString()
         }
     }
     else{
@@ -224,6 +232,9 @@ export const getFieldData = (page) => {
         return LedgerData;
     }
 
+    if(page == 'journals'){
+        return JournalData;
+    }
 } 
 
 export const isUploadButton = (page) => {

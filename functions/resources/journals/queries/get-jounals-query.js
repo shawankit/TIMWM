@@ -1,4 +1,4 @@
-const { Journal } = require("../../../models");
+const { Journal, Ledger } = require("../../../models");
 
 module.exports = class GetJournalsQuery {
     constructor(search, offset = 0, limit, filters){

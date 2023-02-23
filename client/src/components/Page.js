@@ -8,6 +8,7 @@ import Button from '../atoms/Button';
 import { getPageName, isUploadButton } from '../util/util';
 import CustomerForm from './Forms/CustomerForm';
 import InvoiceForm from './Forms/InvoiceForm';
+import JournalForm from './Forms/JournalForm';
 const { Title } = Typography;
 
 const Page = ({ page }) => {
@@ -66,6 +67,14 @@ const Page = ({ page }) => {
                 }
 
                 { (page === 'sales' || page == 'purchase') && <InvoiceForm 
+                        data={editData}
+                        callback={() => setReload(!reload)}
+                        setEditData={setEditData}
+                        page={page}
+                    />
+                }
+
+                { (page === 'journals') && <JournalForm 
                         data={editData}
                         callback={() => setReload(!reload)}
                         setEditData={setEditData}

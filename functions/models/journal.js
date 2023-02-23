@@ -18,6 +18,8 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.UUID
     },
+    dated: DataTypes.DATEONLY,
+    description: DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'Journal',

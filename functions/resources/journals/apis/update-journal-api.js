@@ -8,10 +8,11 @@ const db = require('db/repository');
 const GetAJounalQuery = require('../queries/get-a-journal-query');
 const DeleteJournalLedgersQuery = require('../queries/delete-journal-ledgers-query');
 const CreateJournalLedgerInBulkQuery = require('../queries/create-journal-ledger-in-bulk-query');
+const UpdateJournalQuery = require('../queries/update-journal-query');
 
 const post = async (req) => {
     const { 
-        jounalLedgers 
+        jounalLedgers , dated, description 
     } = req.body;
 
     logInfo('Request to update journals',{ });
@@ -29,11 +30,7 @@ const post = async (req) => {
                 const deleteIds = deleteLedger.map((tr) => tr.JournalLedger.id);
                 return deleteIds.length > 0 ? db.execute(new DeleteJournalLedgersQuery(deleteIds)) : Result.Ok({})
             },
-            () => db.execute(new CreateInvoiceInBulkQuery(
-                [{
-                    id, type, invoiceNumber, customerId, invoiceDate, companyId, labourCharges, claimAmount, taxableAmount, igst, cgst, sgst, cess, roundOff, tcs, totalValue
-                }]
-            ))
+            () => db.execute(new UpdateJournalQuery(id, dated, description ))
         )(),
         () => db.findOne(new GetAJounalQuery(id)),
     )();

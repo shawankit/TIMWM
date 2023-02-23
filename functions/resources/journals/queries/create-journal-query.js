@@ -2,9 +2,9 @@ const { Journal } = require("../../../models");
 
 
 module.exports = class CreateJournalQuery {
-    constructor(id){
+    constructor(id, dated, description ){
         this.details = {
-            id
+            id, dated, description 
         }
     }
 

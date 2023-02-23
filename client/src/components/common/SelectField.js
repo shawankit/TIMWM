@@ -10,7 +10,7 @@ const SelectField = ({label, lcol , icol, option, selected, ...property}) => {
                 <Col span={icol? icol : 8} className="mb-3">
                     <div className="mt-5">
                         <Select className="w-full" placeholder={label} {...property}>
-                            { option.map((ele,index) => <Option value={ele.value} key={index}>{ele.text}</Option>) }
+                            { option?.map((ele,index) => <Option value={ele.value} key={index}>{ele.text}</Option>) }
                         </Select>
                     </div>
                 </Col> 

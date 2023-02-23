@@ -101,7 +101,7 @@ const CustomerForm = ({ data , callback, setEditData, page }) => {
                             /> : 
                             <SelectField
                                 label={field.label}
-                                option={eval(masterData[field.list]).map((item) => ({ value: item.value, text: item.label}))}
+                                option={eval(masterData[field.list])?.map((item) => ({ value: item.value, text: item.label}))}
                                 showSearch
                                 optionFilterProp="children"
                                 value={formData ? formData[field.name] : ''}

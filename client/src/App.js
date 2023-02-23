@@ -80,6 +80,9 @@ const App = () => {
               <Route exact path="/payments">
                 <Page  page={'payments'} />
               </Route>
+              <Route exact path="/journals">
+                <Page  page={'journals'} />
+              </Route>
               <Route exact path="/customers">
                 <Page page={'customer'}/>
               </Route>

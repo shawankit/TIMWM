@@ -25,9 +25,9 @@ const post = async (req) => {
         )),
         (journalData) => composeResult(
             async () => {
-                const oldledgers = journalData.ledgers;
-                const deleteLedger = oldledgers.filter((existingLedger) => !jounalLedgers.find((jounalLedger) => existingLedger.JournalLedger.id === jounalLedger.id))
-                const deleteIds = deleteLedger.map((tr) => tr.JournalLedger.id);
+                const oldledgers = journalData.journalLedgers;
+                const deleteLedger = oldledgers.filter((existingLedger) => !jounalLedgers.find((jounalLedger) => existingLedger.id === jounalLedger.id))
+                const deleteIds = deleteLedger.map((tr) => tr.id);
                 return deleteIds.length > 0 ? db.execute(new DeleteJournalLedgersQuery(deleteIds)) : Result.Ok({})
             },
             () => db.execute(new UpdateJournalQuery(id, dated, description ))

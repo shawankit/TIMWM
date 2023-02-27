@@ -20,8 +20,8 @@ const post = async (req) => {
         () => db.execute(new DeleteJournalQuery(id)),
         (journalData) => composeResult(
             async () => {
-                const ledgers = journalData.ledgers;
-                const deleteIds = ledgers.map((tr) => tr.JournalLedger.id);
+                const journalLedgers = journalData.journalLedgers;
+                const deleteIds = journalLedgers.map((tr) => tr.id);
                 return deleteIds.length > 0 ? db.execute(new DeleteJournalLedgersQuery(deleteIds)) : Result.Ok({})
             },
         )(),

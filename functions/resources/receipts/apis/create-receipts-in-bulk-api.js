@@ -38,4 +38,4 @@ const post = async (req) => {
 }
 
 
-Route.withSecurity().noAuth().post('/receipts',post).bind();
+Route.withSecurity().noAuth().post('/bulk/receipts',post).bind();

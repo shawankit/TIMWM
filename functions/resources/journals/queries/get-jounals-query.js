@@ -1,4 +1,4 @@
-const { Journal, Ledger } = require("../../../models");
+const { Journal, Ledger, JournalLedger } = require("../../../models");
 
 module.exports = class GetJournalsQuery {
     constructor(search, offset = 0, limit, filters){
@@ -11,8 +11,12 @@ module.exports = class GetJournalsQuery {
         return Journal.findAndCountAll({
             include: [
                 {
-                    model: Ledger,
-                    as: 'ledgers',
+                    model: JournalLedger,
+                    as: 'journalLedgers',
+                    include: [{
+                        model: Ledger,
+                        as: 'ledger',
+                    }]
                 }
             ],
             offset: this.details.offset,

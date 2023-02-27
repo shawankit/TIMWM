@@ -5,10 +5,9 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Journal extends Model {
     static associate(models) {
-      Journal.belongsToMany(models.Ledger, {
-        through: models.JournalLedger,
+      Journal.hasMany(models.JournalLedger, {
         foreignKey: 'journalId',
-        as: 'ledgers'
+        as: 'journalLedgers'
       });
     }
   }

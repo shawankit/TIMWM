@@ -1,15 +1,15 @@
-const { JournalLedger } = require("../../../models");
+const { Ledger } = require("../../../models");
 
-module.exports = class CreateJournalLedgerInBulkQuery {
+module.exports = class CreateLedgerInBulkQuery {
     constructor(list) {
         this.details = list;
     }
 
     async get() {
-        const fieldsToUpdate = Object.keys(JournalLedger.getAttributes());
+        const fieldsToUpdate = Object.keys(Ledger.getAttributes());
         const fieldsToExclude = ['id', 'createdAt'];
 
-        return JournalLedger.bulkCreate(this.details, {
+        return Ledger.bulkCreate(this.details, {
             updateOnDuplicate: fieldsToUpdate.filter((field) => !fieldsToExclude.includes(field))
         });
     }

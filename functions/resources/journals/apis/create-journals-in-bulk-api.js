@@ -3,11 +3,10 @@ const { logInfo } = require('lib/functional/logger');
 const { respond, composeResult} = require('lib');
 const uuid = require('uuid');
 const db = require('db/repository');
-const CreateUploadMetaDataQuery = require('../../uploadMetaData/queries/create-upload-meta-query');
 const R = require('ramda');
 const { validate } = require('../validators/bulk-create-sales-validator');
 const Result = require('folktale/result');
-const ParseSalesDataService = require('../services/parse-sales-data-service');
+const ParseJounalsDataService = require('../services/parse-journals-data-service');
 
 const post = async (req) => {
     const { sales, type } = req.body;
@@ -26,10 +25,7 @@ const post = async (req) => {
                 const entriesWithIndexAndReasons = erroredEntries.map((item) => ({ index: item.index, reason: item.reason }));
                 return Result.Ok({ csvErrorArray: entriesWithIndexAndReasons });
             },
-            () => composeResult(
-                () => db.create(new CreateUploadMetaDataQuery({ id: uuid.v4(), type: type, message: `${sales.length} rows inserted`, uploadedBy: req.decoded.id })),
-                () => ParseSalesDataService.perform(salesToCreate, type)
-            )()
+            () => ParseJounalsDataService.perform(salesToCreate, type)
         )(),
         () => validate(csvErrorArray)
     )();
@@ -38,4 +34,4 @@ const post = async (req) => {
 }
 
 
-Route.withSecurity().noAuth().post('/sales',post).bind();
+Route.withSecurity().noAuth().post('/bulk/journals',post).bind();

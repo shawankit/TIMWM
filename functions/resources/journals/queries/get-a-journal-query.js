@@ -1,4 +1,4 @@
-const { Journal, Ledger } = require("../../../models");
+const { Journal, JournalLedger } = require("../../../models");
 
 module.exports = class GetAJounalQuery {
     constructor(id){
@@ -10,8 +10,8 @@ module.exports = class GetAJounalQuery {
             where: this.details,
             include: [
                 {
-                    model: Ledger,
-                    as: 'ledgers',
+                    model: JournalLedger,
+                    as: 'journalLedgers',
                 }
             ]
         });

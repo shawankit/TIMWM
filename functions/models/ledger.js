@@ -10,10 +10,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Ledger.belongsToMany(models.Journal, {
-        through: models.JournalLedger,
+      Ledger.hasMany(models.JournalLedger, {
         foreignKey: 'ledgerId',
-        as: 'journals'
+        as: 'journalLedgers'
       });
       Ledger.belongsTo(models.Group, {
         foreignKey: 'groupId',

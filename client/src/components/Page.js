@@ -24,7 +24,7 @@ const Page = ({ page }) => {
         setEditData(null);
     }, [page]);
 
-    const generalForm = ['customer', 'vendor', 'company', 'item', 'groups', 'ledgers'];
+    const generalForm = ['customer', 'vendor', 'company', 'item', 'groups', 'ledgers', 'receipts'];
     return (
     <>
         <Breadcrumb style={{ margin: '16px 0'}} className="text-4xl font-bold">

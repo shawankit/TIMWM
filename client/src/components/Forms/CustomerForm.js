@@ -5,12 +5,12 @@ import { createCustomer, getCompanies, updateCustomer } from '../../api';
 import swal from 'sweetalert';
 import SelectField from '../common/SelectField';
 import { PlusOutlined, RestOutlined } from '@ant-design/icons';
-import { createApiFn, getFieldData } from '../../util/util';
+import { createApiFn, getFieldData, updateApiFn } from '../../util/util';
 
 
 const CustomerForm = ({ data , callback, setEditData, page }) => {
 
-    const FieldData = getFieldData(page);
+    const FieldData = getFieldData(page, 'form_data');
     const initialData = FieldData.reduce((previous, field) => ({...previous,[field.name]: ''}),{});
     const [formData, setFormData] = useState(initialData);
 
@@ -18,8 +18,20 @@ const CustomerForm = ({ data , callback, setEditData, page }) => {
         setFormData({...formData,[e.target.name]: e.target.value});
     }
 
-    const onSelectChange = (name, value) => {
-        setFormData({...formData,[name]: value});
+    const onSelectChange = async (field, value) => {
+        let newValues = { [field.name]: value };
+        if(field.filterDependentMaster){
+            const [listName, fetchData, dependentFieldName] = field.filterDependentMaster;
+            const data = await fetchData(page, value);
+            setMasterData({ ...masterData, [listName]: data });
+            newValues = { ...newValues, [dependentFieldName]: '' }
+        }
+        if(field.populateParentMaster){
+            const newData = field.populateParentMaster(masterData, value);
+            newValues = { ...newValues, ...newData };
+        }
+
+        setFormData({...formData, ...newValues });
     }
 
     const selectFieldList = FieldData.filter((field) => field.type == 'select');
@@ -41,7 +53,7 @@ const CustomerForm = ({ data , callback, setEditData, page }) => {
         const newMasterData = {};
         for (let index = 0; index < selectFieldList.length; index++) {
             const field = selectFieldList[index];
-            newMasterData[field.list] = await field.getData();;
+            newMasterData[field.list] = await field.getData(page);;
         }
 
         setMasterData({ ...masterData, ...newMasterData });
@@ -70,7 +82,7 @@ const CustomerForm = ({ data , callback, setEditData, page }) => {
             let response = await createApiFn(page)(finalData);
             console.log(response);
             if(response?.data?.status == true){
-                swal("Succesfully added customer details", "success");
+                swal(`Succesfully added ${page} details`, "success");
             }
             else{
                 swal("OOPS Something Went wrong", "error");
@@ -106,7 +118,7 @@ const CustomerForm = ({ data , callback, setEditData, page }) => {
                                 optionFilterProp="children"
                                 value={formData ? formData[field.name] : ''}
                                 showArrow={false}
-                                onChange={(value) => onSelectChange(field.name, value)}
+                                onChange={async (value) => onSelectChange(field, value)}
                                 filterOption={(input, option) =>
                                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                 }

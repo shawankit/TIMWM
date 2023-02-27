@@ -35,12 +35,13 @@ const JournalForm = ({ data , callback, setEditData, page }) => {
         console.log(data);
         setFormData({
             ...data,
-            ledgers: data.ledgers.map((ledger) => ({
+            ledgers: data.journalLedgers.map((journalLedger) => ({
                 id: uuid(),
-                ledgerId: ledger.id,
-                name: ledger.name,
-                dr: ledger.JournalLedger.type === 'debit' ?  ledger.JournalLedger.amount : '',
-                cr: ledger.JournalLedger.type === 'credit' ?  ledger.JournalLedger.amount : '',
+                key: uuid(),
+                ledgerId: journalLedger.ledger.id,
+                name: journalLedger.ledger.name,
+                dr: journalLedger.type === 'debit' ?  journalLedger.amount : '',
+                cr: journalLedger.type === 'credit' ?  journalLedger.amount : '',
             }))
         });
     },[data])

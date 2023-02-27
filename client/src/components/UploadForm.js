@@ -222,4 +222,14 @@ const getDataKeysMap = (page) => {
       'PAYMENT DATE': "receiptDate"
     }
   }
+
+    if(page == 'journals'){
+      return {
+        'DATE': 'dated',
+        'LEDGER': 'ledgerName',
+        'DR': 'dr',
+        'CR': 'cr',
+        'DESCRIPTION': 'description'
+      }
+  }
 }

@@ -1,7 +1,7 @@
 const { Ledger, Group } = require("../../../models");
 
 module.exports = class GetLedgersQuery {
-    constructor(search, offset, limit, filters){
+    constructor(search, offset = 0, limit, filters){
         this.details = {
             search, offset, limit, filters
         }

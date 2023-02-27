@@ -1,6 +1,6 @@
 import moment from 'moment';
 import swal from 'sweetalert';
-import { _create_, _delete_, _get_, _update_, createCompany, createCustomer, createItem, deleteCompany, deleteCustomer, deleteInvoice, deleteItem, deleteReceipt, getAllInvoices, getAllReceipts, getCompanies, getCustomers, getItems, updateCompany, updateCustomer, updateItem } from '../api';
+import { _create_, _delete_, _get_, _update_, createCompany, createCustomer, createItem, createReceipt, deleteCompany, deleteCustomer, deleteInvoice, deleteItem, deleteReceipt, getAllInvoices, getAllReceipts, getCompanies, getCustomers, getItems, updateCompany, updateCustomer, updateItem, updateReceipt } from '../api';
 import ReceiptData from '../data/ReceiptData';
 import InvoiceData from '../data/InvoiceData';
 import CustomerData from '../data/CustomerData';
@@ -9,6 +9,7 @@ import CompanyData from '../data/CompanyData';
 import GroupData from '../data/GroupData';
 import LedgerData from '../data/LedgerData';
 import JournalData from '../data/JournalData';
+import ReceiptFormData from '../data/ReceiptFormData';
 
 export function sweetalertValidate(message) {
     swal({
@@ -170,14 +171,13 @@ export const mappingData = (page, data) => {
             customerName: data.customer?.name,
             customerCode: data.customer?.code,
             companyName: data.company.name,
-            division: data.company.division,
-            receiptDate: data.receiptDate? moment(data.receiptDate).format('DD-MM-YYYY') : null,
+            division: data.company.division
         }
     }
     else if(page === 'journals'){
         return {
             ...data,
-            ledgerNames: data.ledgers.map((l) => l.name).toString()
+            ledgerNames: data.journalLedgers.map((l) => l.ledger.name).toString()
         }
     }
     else{
@@ -205,9 +205,9 @@ export const getApiFn = (page) => {
     return (page, search, offset, limit, filters) => _get_(page)(search, offset, limit);
 }
 
-export const getFieldData = (page) => {
+export const getFieldData = (page, type) => {
     if(page == 'receipts' || page == 'payments'){ 
-        return ReceiptData;
+        return type == 'form_data' ? ReceiptFormData : ReceiptData;
     }
     if(page == 'purchase' || page == 'sales'){
         return InvoiceData;
@@ -273,6 +273,10 @@ export const createApiFn = (page) => {
         return createCustomer;
     }
 
+    if(page == 'receipts' || page == 'payments'){
+        return createReceipt;
+    }
+
     if(page == 'company'){
         return createCompany;
     }
@@ -286,6 +290,10 @@ export const createApiFn = (page) => {
 export const updateApiFn = (page) => {
     if(page == 'customer' || page == 'vendor'){
         return updateCustomer;
+    }
+
+    if(page == 'receipts' || page == 'payments'){
+        return updateReceipt;
     }
 
     if(page == 'company'){

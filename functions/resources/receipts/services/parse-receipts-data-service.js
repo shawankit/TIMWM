@@ -13,17 +13,33 @@ const processData = async (receipts, type, allDbMap, invoiceType) => {
     const { companyNameDivisionIdMap, customerCodeIdMap, invoiceNumberIdMap } = allDbMap;
     let error = false;
     const customerType = type == 'receipts' ? 'Customer' : 'Vendor'
+    let customersMap = {};
+    let companiesMap = {};
     receipts.forEach((data, index) => {
-        const { companyName, division, customerCode, nature, invoiceNumber } = data;
+        const { companyName, division, customerCode, nature, invoiceNumber, customerName } = data;
         
+        let rowError = false;
         if(!customerCodeIdMap[customerCode]){
-            receipts[index].reason.push(`${customerCode}(${customerType} Code) does not exist! Pleae add ${invoiceType} invoice for ${customerCode}`);
-            error = true;
+            if(typeof nature == 'string' && nature.toLowerCase() === 'adjust'){
+                receipts[index].reason.push(`Add as Advance but for Adjust, customer code (${customerCode}) with invoice number should exist in system`);
+                error = true;
+                rowError = true;
+            }
+            if(typeof nature == 'string' && nature.toLowerCase() == 'advance'){
+                customersMap[customerCode] = { customerId: uuid.v4(), customerName, companyName, division };
+            }
         }
 
         if(!companyNameDivisionIdMap[`${companyName}::${division}`]){
-            receipts[index].reason.push(`${companyName} and ${division}(Company and Division) does not exist! Pleae add ${invoiceType} invoice for ${companyName} and ${division}`);
-            error = true;
+            if(!rowError  && typeof nature == 'string' && nature.toLowerCase() === 'adjust'){
+                receipts[index].reason.push(`Add as Advance but for Adjust, division(${division}) and company(${companyName}) with invoice number should exist in system`);
+                error = true;
+                rowError = true;
+            }
+
+            if(typeof nature == 'string' && nature.toLowerCase() == 'advance'){
+                companiesMap[`${companyName}::${division}`] = { companyId: uuid.v4(), companyName, division };
+            }
         }
 
         if( typeof nature != 'string' || (typeof nature == 'string' && !(['advance', 'adjust'].includes(nature.toLowerCase()) ))){
@@ -31,9 +47,9 @@ const processData = async (receipts, type, allDbMap, invoiceType) => {
             error = true;
         }
 
-        if(nature.toLowerCase() == 'adjust'){
-            if(invoiceNumber !== '' && !invoiceNumberIdMap[invoiceNumber]){
-                receipts[index].reason.push(`${invoiceNumber}(Invoice Number) does not exist! Pleae add ${invoiceType} invoice ${invoiceNumber}`);
+        if(typeof nature == 'string' && nature.toLowerCase() == 'adjust'){
+            if(!rowError  && invoiceNumber !== '' && !invoiceNumberIdMap[invoiceNumber]){
+                receipts[index].reason.push(`${invoiceNumber}(Invoice Number) does not exist! Pleae add ${invoiceType} invoice ${invoiceNumber} or you can add receipt as advance`);
                 error = true;
             }
             if(invoiceNumber == ''){
@@ -44,7 +60,34 @@ const processData = async (receipts, type, allDbMap, invoiceType) => {
     });
 
     let receiptsTobeCreated = [];
+    let customersToBeCreated = [];
+    let companyToBeCreated = [];
     if(!error){
+        
+        companyToBeCreated =  Object.entries(companiesMap).map(([key, value]) => {
+            const { companyId, companyName, division } = value;
+            companyNameDivisionIdMap[key] = companyId;
+
+            return {
+                id: companyId,
+                name: companyName,
+                division
+            }
+        });
+
+        customersToBeCreated =  Object.entries(customersMap).map(([customerCode, value]) => {
+            const {customerId, customerName, companyName, division } = value;
+            customerCodeIdMap[customerCode] = customerId;
+
+            return {
+                id: customerId,
+                type: invoiceType == 'sales' ? 'customer' : 'vendor',
+                code: customerCode,
+                name:  customerName,
+                companyId: companyNameDivisionIdMap[`${companyName}::${division}`],
+            }
+        });
+
         receiptsTobeCreated = receipts.map((data, index) => {
             const { companyName, division, customerCode, nature, invoiceNumber, amount, via, receiptDate } = data;
             
@@ -64,6 +107,8 @@ const processData = async (receipts, type, allDbMap, invoiceType) => {
     
     return Result.Ok({
         receiptsTobeCreated,
+        customers: customersToBeCreated,
+        companies: companyToBeCreated,
         error 
     });
 }

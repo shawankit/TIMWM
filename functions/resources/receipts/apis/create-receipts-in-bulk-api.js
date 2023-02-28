@@ -9,6 +9,8 @@ const { validate } = require('../validators/bulk-create-receipts-validator');
 const Result = require('folktale/result');
 const ParseReceiptsDataService = require('../services/parse-receipts-data-service');
 const CreateReceiptsInBulkQuery = require('../queries/create-receipts-query');
+const CreateCustomerInBulkQuery = require('../../customers/queries/create-customers-in-bulk-query');
+const CreateCompanyInBulkQuery = require('../../company/queries/create-company-in-bulk-query');
 
 const post = async (req) => {
     const { receipts, type } = req.body;
@@ -27,7 +29,9 @@ const post = async (req) => {
             },
             () => composeResult(
                 () => db.create(new CreateUploadMetaDataQuery({ id: uuid.v4(), type: type, message: `${receipts.length} rows inserted`, uploadedBy: req.decoded.id })),
-                () => db.execute(new CreateReceiptsInBulkQuery({ receipts: data.receiptsTobeCreated }))
+                () => db.execute(new CreateReceiptsInBulkQuery({ receipts: data.receiptsTobeCreated })),
+                async () => data.customers.length > 0 ? db.create(new CreateCustomerInBulkQuery(data.customers)) : Result.Ok(''),
+                async () => data.companies.length > 0 ? db.create(new CreateCompanyInBulkQuery(data.companies)) : Result.Ok('')
             )()
         )(),
         () => ParseReceiptsDataService.perform(csvErrorArray, type),

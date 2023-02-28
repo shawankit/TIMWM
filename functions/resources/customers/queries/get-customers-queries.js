@@ -1,4 +1,5 @@
 const { Customer, Company } = require("../../../models");
+const { Op } = require('sequelize');
 
 module.exports = class GetCustomersQuery {
     constructor(type, search, offset = 0, limit, filters){
@@ -14,9 +15,7 @@ module.exports = class GetCustomersQuery {
         if (this.details.search) {
             condition = {
                 ...condition,
-                [Op.or]: [
-                    { name: { [Op.iLike]: `%${this.details.name}%` } }
-                ]
+                name: { [Op.iLike]: `%${this.details.search}%` }
             };
         }
 

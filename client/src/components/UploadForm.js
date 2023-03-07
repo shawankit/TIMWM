@@ -7,8 +7,7 @@ import DownloadCsv from "./CSVComponent/DownloadCsv";
 import IconWithHeading from "../molecules/IconWithHeading";
 import { GlobalOutlined } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
-import { createReceiptsInBulk, createSalesInBulk } from "../api";
-import { sweetalertMessage, sweetalertValidate } from "../util/util";
+import { createBulkApiFn, sweetalertMessage, sweetalertValidate } from "../util/util";
 
 const BulkUploadForm = ({ page, setReload }) => {
 
@@ -41,7 +40,7 @@ const BulkUploadForm = ({ page, setReload }) => {
 
     const handleBulkCreation = async (csvData) => {
       console.log(csvData, 'csvData')
-        const createApi = page == 'receipts' || page == 'payments'? createReceiptsInBulk : createSalesInBulk;
+        const createApi = createBulkApiFn(page);
         const res = await createApi(csvData, page);
         console.log(res, 'res')
         if (res.data.status) {
@@ -225,8 +224,9 @@ const getDataKeysMap = (page) => {
 
     if(page == 'journals'){
       return {
+        'LEDGER CODE': 'ledgerCode',
+        'LEDGER NAME': 'ledgerName',
         'DATE': 'dated',
-        'LEDGER': 'ledgerName',
         'DR': 'dr',
         'CR': 'cr',
         'DESCRIPTION': 'description'

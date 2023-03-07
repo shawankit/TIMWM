@@ -1,6 +1,8 @@
 import moment from 'moment';
 import swal from 'sweetalert';
-import { _create_, _delete_, _get_, _update_, createCompany, createCustomer, createItem, createReceipt, deleteCompany, deleteCustomer, deleteInvoice, deleteItem, deleteReceipt, getAllInvoices, getAllReceipts, getCompanies, getCustomers, getItems, updateCompany, updateCustomer, updateItem, updateReceipt } from '../api';
+import { 
+    _create_, _delete_, _get_, _update_, createCompany, createCustomer, createItem, createJournalsInBulk, createReceipt, createReceiptsInBulk, createSalesInBulk, deleteCompany, deleteCustomer, deleteInvoice, deleteItem,
+    deleteReceipt, getAllInvoices, getAllReceipts, getCompanies, getCustomers, getItems, updateCompany, updateCustomer, updateItem, updateReceipt } from '../api';
 import ReceiptData from '../data/ReceiptData';
 import InvoiceData from '../data/InvoiceData';
 import CustomerData from '../data/CustomerData';
@@ -241,7 +243,7 @@ export const isUploadButton = (page) => {
     if(page == 'receipts' || page == 'payments'){ 
         return true;
     }
-    if(page == 'purchase' || page == 'sales'){
+    if(page == 'purchase' || page == 'sales' || page == 'journals'){
         return true;
     }
     return false;
@@ -304,4 +306,16 @@ export const updateApiFn = (page) => {
         return updateItem;
     }
     return _update_(page);
+}
+
+export const createBulkApiFn = (page) => {
+    if(page == 'receipts' || page == 'payments'){
+        return createReceiptsInBulk;
+    }
+    if(page == 'purchase' || page == 'sales'){
+        return createSalesInBulk;
+    }
+    if(page == 'journals'){
+        return createJournalsInBulk;
+    }
 }

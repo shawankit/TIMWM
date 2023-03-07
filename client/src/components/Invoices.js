@@ -101,7 +101,7 @@ const Invoices = ({ page, reload, setEditData, setReload }) => {
                 }
 
                 if(column.name === 'groupId'){
-                    return `${data?.group?.name}` 
+                    return `${data?.group ? data?.group.name : ''}` 
                 }
                 return value
             }

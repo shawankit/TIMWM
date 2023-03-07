@@ -17,7 +17,7 @@ const post = async (req) => {
     const salesToCreate = sales.map((sale) => ({ ...sale, id: uuid.v4()}));
 
     const csvErrorArray = salesToCreate.map((each, index) => ({ ...each, index, reason: [] }));
-    console.log('salesToCreate', salesToCreate);
+    
     const response = await composeResult(
         async () => R.ifElse(
             () => csvErrorArray.filter((item) => item.reason.length > 0).length > 0,

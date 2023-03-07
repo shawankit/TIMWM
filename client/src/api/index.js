@@ -54,6 +54,7 @@ export const userSession = (mobileNumber, otp) => API.post('/auth/mobile/user', 
 
 export const createSalesInBulk = (sales, type) => API.post('/sales', { sales, type }, { headers: getHeaders() });
 export const createReceiptsInBulk = (receipts, type) => API.post('/bulk/receipts', { receipts, type }, { headers: getHeaders() });
+export const createJournalsInBulk = (journals, type) => API.post('/bulk/journals', { journals, type }, { headers: getHeaders() });
 
 export const getAllInvoices = (type, search, offset, limit, filters) => API.get(UrlParamsReplace(`/invoices`, {}, { type, search, offset, limit, filters }), { headers: getHeaders() });
 export const getInvoiceById = (invoiceId) => API.get(`/invoices/${invoiceId}`, { headers: getHeaders() });

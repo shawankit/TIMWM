@@ -38,6 +38,7 @@ const processData = async (journals) => {
     journalTcs.push({
         journalLedgers
     });
+    console.log('journalTcs');
     return Result.Ok(journalTcs);
 }
 

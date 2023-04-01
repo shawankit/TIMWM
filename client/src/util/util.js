@@ -136,7 +136,7 @@ export const getDateWithTime = (date, [h, m, s]) => {
   };
 
 export const getTitle = (column, page) => {
-    if((page == 'purchase' || page == 'payments') && (column.name == 'customerName' || column.name == 'customerCode')){
+    if((page == 'purchase' || page == 'payments' || page == 'credit_note') && (column.name == 'customerName' || column.name == 'customerCode')){
        return column.label.replace('Customer','Vendor');
     }
     if(page == 'payments' && (column.name == 'receiptDate' || column.name == 'via')){
@@ -162,10 +162,12 @@ export const getPageName = (page) => {
     if(page === 'groups') return 'Groups';
     if(page === 'ledgers') return 'Ledgers';
     if(page === 'journals') return 'Journals';
+    if(page === 'debit_note') return 'Debit Notes';
+    if(page === 'credit_note') return 'Credit Notes';
 }
 
 export const mappingData = (page, data) => {
-    const invoicePage = ['sales', 'purchase', 'receipts', 'payments']
+    const invoicePage = ['sales', 'purchase', 'receipts', 'payments', 'debit_note', 'credit_note'];
     if(invoicePage.includes(page)){
         return  {
             ...data,
@@ -191,7 +193,7 @@ export const getApiFn = (page) => {
     if(page == 'receipts' || page == 'payments'){ 
         return getAllReceipts;
     }
-    if(page == 'purchase' || page == 'sales'){
+    if(page == 'purchase' || page == 'sales' || page == 'debit_note' || page == 'credit_note'){
         return getAllInvoices;
     }
     if(page == 'customer' || page == 'vendor'){
@@ -211,7 +213,7 @@ export const getFieldData = (page, type) => {
     if(page == 'receipts' || page == 'payments'){ 
         return type == 'form_data' ? ReceiptFormData : ReceiptData;
     }
-    if(page == 'purchase' || page == 'sales'){
+    if(page == 'purchase' || page == 'sales' || page == 'debit_note' || page == 'credit_note'){
         return InvoiceData;
     }
     if(page == 'customer' || page == 'vendor'){
@@ -253,7 +255,7 @@ export const deleteApiFn = (page) => {
     if(page == 'receipts' || page == 'payments'){ 
         return deleteReceipt;
     }
-    if(page == 'purchase' || page == 'sales'){
+    if(page == 'purchase' || page == 'sales' || page == 'debit_note' || page == 'credit_note'){
         return deleteInvoice;
     }
     if(page == 'customer' || page == 'vendor'){

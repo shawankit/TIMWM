@@ -36,7 +36,7 @@ const InvoiceForm = ({ data , callback, setEditData, page}) => {
     const [items, setItems] = useState({});
 
     const fetchData = async () => {
-        const customerType = page == 'sales' || page == 'receipts' ? 'customer' : 'vendor';
+        const customerType = page == 'sales' || page == 'receipts' || page == 'debit_note' ? 'customer' : 'vendor';
         const res = await getCustomers(customerType);
         // console.log('getCustomers', res);
         setCustomers(
@@ -160,7 +160,7 @@ const InvoiceForm = ({ data , callback, setEditData, page}) => {
                 { 
                         InvoiceFormData.map((field) => field.type == 'input' ?
                             <InputField
-                                label={page === 'vendor'? field.label.replace('Customer', 'Vendor') : field.label}
+                                label={page === 'vendor' || page === 'purchase' || page == 'credit_note' ? field.label.replace('Customer', 'Vendor') : field.label}
                                 type={field.inputType} 
                                 name={field.name}
                                 onChange={onChange}
@@ -168,7 +168,7 @@ const InvoiceForm = ({ data , callback, setEditData, page}) => {
                                 value={formData ? formData[field.name] : ''}
                             /> : 
                             <SelectField
-                                label={field.label}
+                                label={page === 'vendor' || page === 'purchase' || page == 'credit_note'? field.label.replace('Customer', 'Vendor') : field.label}
                                 option={eval(field.list).map((item) => ({ value: item.value, text: item.label}))}
                                 showSearch
                                 optionFilterProp="children"

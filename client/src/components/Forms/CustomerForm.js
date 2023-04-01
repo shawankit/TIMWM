@@ -104,7 +104,7 @@ const CustomerForm = ({ data , callback, setEditData, page }) => {
                     { 
                         FieldData.map((field) => field.type == 'input' ?
                             <InputField
-                                label={page === 'vendor'? field.label.replace('Customer', 'Vendor') : field.label}
+                                label={page === 'vendor'  || page == 'payments'  ? field.label.replace('Customer', 'Vendor') : field.label}
                                 type={field.inputType} 
                                 name={field.name}
                                 onChange={onChange}
@@ -112,7 +112,7 @@ const CustomerForm = ({ data , callback, setEditData, page }) => {
                                 value={formData ? formData[field.name] : ''}
                             /> : 
                             <SelectField
-                                label={field.label}
+                                label={page === 'vendor'  || page == 'payments'  ? field.label.replace('Customer', 'Vendor') : field.label}
                                 option={eval(masterData[field.list])?.map((item) => ({ value: item.value, text: item.label}))}
                                 showSearch
                                 optionFilterProp="children"

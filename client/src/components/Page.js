@@ -66,7 +66,8 @@ const Page = ({ page }) => {
                     />
                 }
 
-                { (page === 'sales' || page == 'purchase') && <InvoiceForm 
+                { (page === 'sales' || page == 'purchase' || page == 'debit_note' || page == 'credit_note')
+                    && <InvoiceForm 
                         data={editData}
                         callback={() => setReload(!reload)}
                         setEditData={setEditData}

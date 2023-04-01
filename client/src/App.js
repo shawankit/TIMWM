@@ -101,6 +101,12 @@ const App = () => {
               <Route exact path="/groups">
                 <Page page={'groups'}/>
               </Route>
+              <Route exact path="/debit-notes">
+                <Page page={'debit_note'}/>
+              </Route>
+              <Route exact path="/credit-notes">
+                <Page page={'credit_note'}/>
+              </Route>
             </Switch>
           </div>
         </Content>
